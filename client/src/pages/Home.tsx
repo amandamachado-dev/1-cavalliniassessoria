@@ -1,7 +1,8 @@
 /*
  * Home — Main landing page composing all sections
- * Design: Cinematográfico Noir — Cavallini Assessoria
+ * Theme-aware: bg adapts to light/dark mode
  */
+import { useTheme } from "@/contexts/ThemeContext";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
@@ -14,8 +15,16 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 export default function Home() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        backgroundColor: isDark ? "#000000" : "var(--surface-primary)",
+      }}
+    >
       <Navbar />
       <main>
         <HeroSection />

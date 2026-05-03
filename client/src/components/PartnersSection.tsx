@@ -1,12 +1,14 @@
 /*
- * PartnersSection — Infinite marquee of partner logos
- * Design: Grayscale logos, hover color reveal, dual-track marquee
+ * PartnersSection — Infinite marquee of partner logos, theme-aware
  */
 import { PARTNER_LOGOS } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function PartnersSection() {
   const { ref, isVisible } = useScrollReveal<HTMLElement>();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   // Duplicate logos for seamless infinite scroll
   const logos = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
@@ -14,7 +16,10 @@ export default function PartnersSection() {
   return (
     <section
       ref={ref}
-      className="relative py-16 md:py-20 overflow-hidden border-t border-white/5 bg-[#050505]"
+      className={`relative py-16 md:py-20 overflow-hidden border-t ${
+        isDark ? "border-white/5 bg-[#050505]" : "border-black/5"
+      }`}
+      style={{ backgroundColor: isDark ? undefined : "var(--surface-secondary)" }}
       aria-label="Parceiros e Clientes"
     >
       <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 mb-10">
@@ -30,9 +35,11 @@ export default function PartnersSection() {
             </span>
             <span className="w-8 h-[1px] bg-[#d93e15]" />
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-medium text-white">
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-display font-medium ${
+            isDark ? "text-white" : "text-stone-900"
+          }`}>
             Quem confia na{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d93e15] to-[#ff6b3d]">
+            <span className="text-[#d93e15]">
               Cavallini
             </span>
           </h2>
@@ -42,8 +49,16 @@ export default function PartnersSection() {
       {/* Marquee */}
       <div className="relative overflow-hidden">
         {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
+        <div className={`absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none ${
+          isDark
+            ? "bg-gradient-to-r from-[#050505] to-transparent"
+            : "bg-gradient-to-r from-[var(--surface-secondary)] to-transparent"
+        }`} />
+        <div className={`absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none ${
+          isDark
+            ? "bg-gradient-to-l from-[#050505] to-transparent"
+            : "bg-gradient-to-l from-[var(--surface-secondary)] to-transparent"
+        }`} />
 
         <div className="animate-marquee flex items-center gap-12 md:gap-16 py-6">
           {logos.map((logo, i) => (
@@ -51,7 +66,20 @@ export default function PartnersSection() {
               key={`${logo.name}-${i}`}
               src={logo.src}
               alt={logo.name}
-              className="h-8 md:h-12 w-auto max-w-[120px] md:max-w-[160px] object-contain brightness-0 invert opacity-40 hover:opacity-100 hover:brightness-100 hover:invert-0 transition-all duration-500 shrink-0"
+              className="h-8 md:h-12 w-auto max-w-[120px] md:max-w-[160px] object-contain transition-all duration-500 shrink-0"
+              style={{
+                filter: isDark
+                  ? "brightness(0) invert(1) opacity(0.4)"
+                  : "grayscale(100%) opacity(0.5)",
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLImageElement).style.filter = "grayscale(0%) opacity(1)";
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLImageElement).style.filter = isDark
+                  ? "brightness(0) invert(1) opacity(0.4)"
+                  : "grayscale(100%) opacity(0.5)";
+              }}
               loading="lazy"
             />
           ))}

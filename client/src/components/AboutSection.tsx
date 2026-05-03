@@ -1,9 +1,10 @@
 /*
  * AboutSection — "Quem Somos" with cinematic background and stats
- * Design: Split layout, P&B photography, orange accents
+ * Design: Split layout, P&B photography, orange accents, theme-aware
  */
 import { ASSETS } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Shield, Target, Award, Users } from "lucide-react";
 
 const STATS = [
@@ -16,12 +17,16 @@ const STATS = [
 export default function AboutSection() {
   const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>();
   const { ref: statsRef, isVisible: statsVisible } = useScrollReveal<HTMLDivElement>();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <section
       id="quem-somos"
       ref={sectionRef}
-      className="relative py-24 md:py-32 overflow-hidden border-t border-white/5"
+      className={`relative py-24 md:py-32 overflow-hidden border-t ${
+        isDark ? "border-white/5" : "border-black/5"
+      }`}
       aria-label="Quem Somos"
     >
       {/* Background */}
@@ -29,11 +34,15 @@ export default function AboutSection() {
         <img
           src={ASSETS.aboutBg}
           alt=""
-          className="w-full h-full object-cover opacity-20 grayscale"
+          className={`w-full h-full object-cover grayscale ${isDark ? "opacity-20" : "opacity-8"}`}
           loading="lazy"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black" />
+        <div className={`absolute inset-0 ${
+          isDark
+            ? "bg-gradient-to-b from-black via-black/90 to-black"
+            : "bg-gradient-to-b from-[var(--surface-primary)] via-[var(--surface-primary)]/95 to-[var(--surface-primary)]"
+        }`} />
       </div>
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
@@ -49,9 +58,11 @@ export default function AboutSection() {
               Quem Somos
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium text-white leading-tight max-w-3xl">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-tight max-w-3xl ${
+            isDark ? "text-white" : "text-stone-900"
+          }`}>
             Engenharia de combate a incêndio com{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d93e15] to-[#ff6b3d]">
+            <span className="text-[#d93e15]">
               rigor técnico
             </span>{" "}
             e visão estratégica
@@ -66,18 +77,24 @@ export default function AboutSection() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <p className="text-stone-300 text-base md:text-lg leading-relaxed font-light">
+            <p className={`text-base md:text-lg leading-relaxed font-light ${
+              isDark ? "text-stone-300" : "text-stone-700"
+            }`}>
               A Cavallini Assessoria é especializada em soluções completas de segurança
               contra incêndio. Atuamos com foco em resultados, oferecendo desde a
               consultoria inicial até a execução e aprovação final junto ao Corpo de
               Bombeiros.
             </p>
-            <p className="text-stone-400 text-base leading-relaxed font-light">
+            <p className={`text-base leading-relaxed font-light ${
+              isDark ? "text-stone-400" : "text-stone-600"
+            }`}>
               Nossa equipe de engenheiros e técnicos qualificados garante que cada
               projeto seja conduzido com o mais alto padrão de qualidade, cumprindo
               rigorosamente todas as normas e regulamentações vigentes.
             </p>
-            <p className="text-stone-400 text-base leading-relaxed font-light">
+            <p className={`text-base leading-relaxed font-light ${
+              isDark ? "text-stone-400" : "text-stone-600"
+            }`}>
               Entendemos que segurança contra incêndio não é apenas uma obrigação legal
               — é um compromisso com a vida. Por isso, tratamos cada projeto com a
               seriedade e a dedicação que ele merece.
@@ -85,10 +102,14 @@ export default function AboutSection() {
 
             {/* Signature Quote */}
             <blockquote className="border-l-2 border-[#d93e15] pl-6 mt-8">
-              <p className="text-white/80 text-lg font-display font-medium italic">
+              <p className={`text-lg font-display font-medium italic ${
+                isDark ? "text-white/80" : "text-stone-800"
+              }`}>
                 "Segurança não se promete. Se comprova."
               </p>
-              <cite className="text-stone-500 text-sm font-mono mt-2 block not-italic">
+              <cite className={`text-sm font-mono mt-2 block not-italic ${
+                isDark ? "text-stone-500" : "text-stone-400"
+              }`}>
                 — Cavallini Assessoria
               </cite>
             </blockquote>
@@ -107,7 +128,11 @@ export default function AboutSection() {
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className={`absolute inset-0 ${
+                isDark
+                  ? "bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                  : "bg-gradient-to-t from-white/40 via-transparent to-transparent"
+              }`} />
             </div>
 
             {/* Floating Badge */}
@@ -123,9 +148,9 @@ export default function AboutSection() {
         {/* Stats Grid */}
         <div
           ref={statsRef}
-          className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-16 border-t border-white/5 transition-all duration-1000 ${
-            statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-16 border-t transition-all duration-1000 ${
+            isDark ? "border-white/5" : "border-black/5"
+          } ${statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           {STATS.map((stat, i) => (
             <div
@@ -134,10 +159,14 @@ export default function AboutSection() {
               style={{ transitionDelay: `${i * 100}ms` }}
             >
               <stat.icon className="w-6 h-6 text-[#d93e15] mx-auto mb-3 group-hover:scale-110 transition-transform" />
-              <div className="text-3xl md:text-4xl font-display font-bold text-white mb-1">
+              <div className={`text-3xl md:text-4xl font-display font-bold mb-1 ${
+                isDark ? "text-white" : "text-stone-900"
+              }`}>
                 {stat.value}
               </div>
-              <div className="text-xs font-mono uppercase tracking-widest text-stone-500">
+              <div className={`text-xs font-mono uppercase tracking-widest ${
+                isDark ? "text-stone-500" : "text-stone-400"
+              }`}>
                 {stat.label}
               </div>
             </div>

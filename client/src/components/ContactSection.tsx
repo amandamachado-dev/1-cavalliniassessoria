@@ -1,15 +1,17 @@
 /*
- * ContactSection — Premium contact form with cinematic styling
- * Design: Split layout, form + info, dark glass cards
+ * ContactSection — Premium contact form, theme-aware
  */
 import { useState } from "react";
-import { WHATSAPP_URL, ASSETS } from "@/lib/constants";
+import { WHATSAPP_URL } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTheme } from "@/contexts/ThemeContext";
 import { toast } from "sonner";
 import { Send, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 
 export default function ContactSection() {
   const { ref, isVisible } = useScrollReveal<HTMLElement>();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,11 +34,19 @@ export default function ContactSection() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const inputClasses = `w-full rounded-lg px-4 py-3 text-sm font-sans focus:outline-none transition-all ${
+    isDark
+      ? "bg-white/[0.03] border border-white/10 text-white placeholder:text-stone-600 focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20"
+      : "bg-[var(--input-bg)] border border-[var(--input-border)] text-stone-900 placeholder:text-stone-400 focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20 focus:bg-white"
+  }`;
+
   return (
     <section
       id="contato"
       ref={ref}
-      className="relative py-24 md:py-32 overflow-hidden border-t border-white/5"
+      className={`relative py-24 md:py-32 overflow-hidden border-t ${
+        isDark ? "border-white/5" : "border-black/5"
+      }`}
       aria-label="Contato"
     >
       {/* Background */}
@@ -57,9 +67,11 @@ export default function ContactSection() {
               Contato
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-medium text-white leading-tight max-w-3xl">
+          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-tight max-w-3xl ${
+            isDark ? "text-white" : "text-stone-900"
+          }`}>
             Vamos conversar sobre o seu{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#d93e15] to-[#ff6b3d]">
+            <span className="text-[#d93e15]">
               projeto
             </span>
           </h2>
@@ -75,7 +87,9 @@ export default function ContactSection() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="name" className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-2">
+                  <label htmlFor="name" className={`block text-xs font-mono uppercase tracking-widest mb-2 ${
+                    isDark ? "text-stone-500" : "text-stone-400"
+                  }`}>
                     Nome *
                   </label>
                   <input
@@ -85,12 +99,14 @@ export default function ContactSection() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-sans placeholder:text-stone-600 focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20 focus:outline-none transition-all"
+                    className={inputClasses}
                     placeholder="Seu nome completo"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-2">
+                  <label htmlFor="email" className={`block text-xs font-mono uppercase tracking-widest mb-2 ${
+                    isDark ? "text-stone-500" : "text-stone-400"
+                  }`}>
                     E-mail *
                   </label>
                   <input
@@ -100,7 +116,7 @@ export default function ContactSection() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-sans placeholder:text-stone-600 focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20 focus:outline-none transition-all"
+                    className={inputClasses}
                     placeholder="seu@email.com"
                   />
                 </div>
@@ -108,7 +124,9 @@ export default function ContactSection() {
 
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-2">
+                  <label htmlFor="phone" className={`block text-xs font-mono uppercase tracking-widest mb-2 ${
+                    isDark ? "text-stone-500" : "text-stone-400"
+                  }`}>
                     Telefone
                   </label>
                   <input
@@ -117,12 +135,14 @@ export default function ContactSection() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-sans placeholder:text-stone-600 focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20 focus:outline-none transition-all"
+                    className={inputClasses}
                     placeholder="(11) 99999-9999"
                   />
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-2">
+                  <label htmlFor="subject" className={`block text-xs font-mono uppercase tracking-widest mb-2 ${
+                    isDark ? "text-stone-500" : "text-stone-400"
+                  }`}>
                     Assunto *
                   </label>
                   <select
@@ -131,20 +151,22 @@ export default function ContactSection() {
                     required
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-sans focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20 focus:outline-none transition-all appearance-none"
+                    className={`${inputClasses} appearance-none`}
                   >
-                    <option value="" className="bg-black">Selecione...</option>
-                    <option value="avcb" className="bg-black">AVCB</option>
-                    <option value="consultoria" className="bg-black">Consultoria</option>
-                    <option value="projetos" className="bg-black">Projetos</option>
-                    <option value="execucao" className="bg-black">Execução e Manutenção</option>
-                    <option value="outro" className="bg-black">Outro</option>
+                    <option value="" className={isDark ? "bg-black" : "bg-white"}>Selecione...</option>
+                    <option value="avcb" className={isDark ? "bg-black" : "bg-white"}>AVCB</option>
+                    <option value="consultoria" className={isDark ? "bg-black" : "bg-white"}>Consultoria</option>
+                    <option value="projetos" className={isDark ? "bg-black" : "bg-white"}>Projetos</option>
+                    <option value="execucao" className={isDark ? "bg-black" : "bg-white"}>Execução e Manutenção</option>
+                    <option value="outro" className={isDark ? "bg-black" : "bg-white"}>Outro</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-xs font-mono uppercase tracking-widest text-stone-500 mb-2">
+                <label htmlFor="message" className={`block text-xs font-mono uppercase tracking-widest mb-2 ${
+                  isDark ? "text-stone-500" : "text-stone-400"
+                }`}>
                   Mensagem *
                 </label>
                 <textarea
@@ -154,7 +176,7 @@ export default function ContactSection() {
                   rows={5}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-4 py-3 text-white text-sm font-sans placeholder:text-stone-600 focus:border-[#d93e15]/50 focus:ring-1 focus:ring-[#d93e15]/20 focus:outline-none transition-all resize-none"
+                  className={`${inputClasses} resize-none`}
                   placeholder="Descreva brevemente sua necessidade..."
                 />
               </div>
@@ -184,10 +206,14 @@ export default function ContactSection() {
               className="group block bg-[#d93e15]/5 border border-[#d93e15]/20 rounded-lg p-6 hover:bg-[#d93e15]/10 hover:border-[#d93e15]/40 transition-all duration-300"
             >
               <Phone className="w-6 h-6 text-[#d93e15] mb-3" />
-              <h3 className="text-white font-display font-medium text-lg mb-1">
+              <h3 className={`font-display font-medium text-lg mb-1 ${
+                isDark ? "text-white" : "text-stone-900"
+              }`}>
                 WhatsApp
               </h3>
-              <p className="text-stone-400 text-sm font-light mb-3">
+              <p className={`text-sm font-light mb-3 ${
+                isDark ? "text-stone-400" : "text-stone-600"
+              }`}>
                 Atendimento rápido e direto com nossos especialistas.
               </p>
               <span className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-[#d93e15] group-hover:gap-3 transition-all">
@@ -197,26 +223,44 @@ export default function ContactSection() {
             </a>
 
             {/* Location Card */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-lg p-6">
+            <div className={`rounded-lg border p-6 ${
+              isDark
+                ? "bg-white/[0.02] border-white/5"
+                : "bg-white/80 border-black/5 shadow-sm"
+            }`}>
               <MapPin className="w-6 h-6 text-[#d93e15] mb-3" />
-              <h3 className="text-white font-display font-medium text-lg mb-1">
+              <h3 className={`font-display font-medium text-lg mb-1 ${
+                isDark ? "text-white" : "text-stone-900"
+              }`}>
                 Localização
               </h3>
-              <p className="text-stone-400 text-sm font-light">
+              <p className={`text-sm font-light ${
+                isDark ? "text-stone-400" : "text-stone-600"
+              }`}>
                 São Paulo, SP — Brasil
               </p>
-              <p className="text-stone-500 text-xs font-mono mt-2">
+              <p className={`text-xs font-mono mt-2 ${
+                isDark ? "text-stone-500" : "text-stone-400"
+              }`}>
                 Atendemos todo o estado de São Paulo
               </p>
             </div>
 
             {/* Hours Card */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-lg p-6">
+            <div className={`rounded-lg border p-6 ${
+              isDark
+                ? "bg-white/[0.02] border-white/5"
+                : "bg-white/80 border-black/5 shadow-sm"
+            }`}>
               <Clock className="w-6 h-6 text-[#d93e15] mb-3" />
-              <h3 className="text-white font-display font-medium text-lg mb-1">
+              <h3 className={`font-display font-medium text-lg mb-1 ${
+                isDark ? "text-white" : "text-stone-900"
+              }`}>
                 Horário
               </h3>
-              <p className="text-stone-400 text-sm font-light">
+              <p className={`text-sm font-light ${
+                isDark ? "text-stone-400" : "text-stone-600"
+              }`}>
                 Seg — Sex: 08h às 18h
               </p>
               <p className="text-[#d93e15] text-xs font-mono font-bold mt-2 uppercase tracking-wider">

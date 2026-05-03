@@ -18,7 +18,7 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = "light",
+  defaultTheme = "dark",
   switchable = false,
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -31,6 +31,10 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = document.documentElement;
+
+    // Add transition class for smooth theme switching
+    root.classList.add("theme-transitioning");
+
     if (theme === "dark") {
       root.classList.add("dark");
     } else {
@@ -40,11 +44,18 @@ export function ThemeProvider({
     if (switchable) {
       localStorage.setItem("theme", theme);
     }
+
+    // Remove transition class after animation completes
+    const timeout = setTimeout(() => {
+      root.classList.remove("theme-transitioning");
+    }, 600);
+
+    return () => clearTimeout(timeout);
   }, [theme, switchable]);
 
   const toggleTheme = switchable
     ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
+        setTheme((prev) => (prev === "light" ? "dark" : "light"));
       }
     : undefined;
 
