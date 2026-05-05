@@ -1,5 +1,7 @@
 /*
- * PartnersSection — Infinite marquee of partner logos, theme-aware
+ * PartnersSection — Partner logos grid, theme-aware
+ * Design: Static grid with uniform logo sizes, visible in both dark and light modes
+ * Each logo is displayed in a card with consistent sizing
  */
 import { PARTNER_LOGOS } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -10,21 +12,18 @@ export default function PartnersSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  // Duplicate logos for seamless infinite scroll
-  const logos = [...PARTNER_LOGOS, ...PARTNER_LOGOS];
-
   return (
     <section
       ref={ref}
-      className={`relative py-16 md:py-20 overflow-hidden border-t ${
-        isDark ? "border-white/5 bg-[#050505]" : "border-black/5"
+      className={`relative py-16 md:py-24 border-t ${
+        isDark ? "border-white/5 bg-[#050505]" : "border-black/8 bg-stone-100"
       }`}
-      style={{ backgroundColor: isDark ? undefined : "var(--surface-secondary)" }}
       aria-label="Parceiros e Clientes"
     >
-      <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 mb-10">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+        {/* Header */}
         <div
-          className={`text-center transition-all duration-1000 ${
+          className={`text-center mb-12 transition-all duration-1000 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -35,56 +34,87 @@ export default function PartnersSection() {
             </span>
             <span className="w-8 h-[1px] bg-[#d93e15]" />
           </div>
-          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-display font-medium ${
-            isDark ? "text-white" : "text-stone-900"
-          }`}>
+          <h2
+            className={`text-2xl sm:text-3xl md:text-4xl font-display font-medium ${
+              isDark ? "text-white" : "text-stone-900"
+            }`}
+          >
             Quem confia na{" "}
-            <span className="text-[#d93e15]">
-              Cavallini
-            </span>
+            <span className="text-[#d93e15]">Cavallini</span>
           </h2>
+          <p className={`text-sm mt-3 font-light ${isDark ? "text-stone-500" : "text-stone-500"}`}>
+            Empresas e organizações que confiam em nossa expertise
+          </p>
         </div>
-      </div>
 
-      {/* Marquee */}
-      <div className="relative overflow-hidden">
-        {/* Fade edges */}
-        <div className={`absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none ${
-          isDark
-            ? "bg-gradient-to-r from-[#050505] to-transparent"
-            : "bg-gradient-to-r from-[var(--surface-secondary)] to-transparent"
-        }`} />
-        <div className={`absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none ${
-          isDark
-            ? "bg-gradient-to-l from-[#050505] to-transparent"
-            : "bg-gradient-to-l from-[var(--surface-secondary)] to-transparent"
-        }`} />
-
-        <div className="animate-marquee flex items-center gap-12 md:gap-16 py-6">
-          {logos.map((logo, i) => (
-            <img
-              key={`${logo.name}-${i}`}
+        {/* Logos Grid */}
+        <div
+          className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 md:gap-6 transition-all duration-1000 delay-200 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          {PARTNER_LOGOS.map((logo, i) => (
+            <PartnerLogoCard
+              key={logo.name}
+              name={logo.name}
               src={logo.src}
-              alt={logo.name}
-              className="h-8 md:h-12 w-auto max-w-[120px] md:max-w-[160px] object-contain transition-all duration-500 shrink-0"
-              style={{
-                filter: isDark
-                  ? "brightness(0) invert(1) opacity(0.4)"
-                  : "grayscale(100%) opacity(0.5)",
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLImageElement).style.filter = "grayscale(0%) opacity(1)";
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLImageElement).style.filter = isDark
-                  ? "brightness(0) invert(1) opacity(0.4)"
-                  : "grayscale(100%) opacity(0.5)";
-              }}
-              loading="lazy"
+              isDark={isDark}
+              index={i}
             />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function PartnerLogoCard({
+  name,
+  src,
+  isDark,
+  index,
+}: {
+  name: string;
+  src: string;
+  isDark: boolean;
+  index: number;
+}) {
+  // Determine filter based on theme
+  // In dark mode: invert to white so logos are visible on dark bg
+  // In light mode: darken logos so they're visible on light bg
+  const filter = isDark
+    ? "brightness(0) invert(1)"
+    : "brightness(0) contrast(1)";
+
+  return (
+    <div
+      className={`group flex items-center justify-center rounded-lg p-4 transition-all duration-300 cursor-default ${
+        isDark
+          ? "bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15"
+          : "bg-white hover:bg-stone-50 border border-stone-200 hover:border-stone-300 shadow-sm hover:shadow-md"
+      }`}
+      style={{ transitionDelay: `${index * 50}ms` }}
+      title={name}
+    >
+      <img
+        src={src}
+        alt={`Logo ${name}`}
+        className="w-full h-10 object-contain transition-all duration-500 group-hover:scale-105"
+        style={{
+          filter: filter,
+          opacity: isDark ? 0.7 : 0.65,
+          maxWidth: "120px",
+        }}
+        loading="lazy"
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLImageElement).style.filter = "none";
+          (e.currentTarget as HTMLImageElement).style.opacity = "1";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLImageElement).style.filter = filter;
+          (e.currentTarget as HTMLImageElement).style.opacity = isDark ? "0.7" : "0.65";
+        }}
+      />
+    </div>
   );
 }

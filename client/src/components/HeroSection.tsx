@@ -2,19 +2,19 @@
  * HeroSection — Fullscreen centered hero with large logo + subtitle only
  * Design: Large CAVALLINI logo centered, subtitle below, fullscreen image carousel
  * Hero stays dark in both light and dark modes (per original behavior)
+ * Updated: replaced alarm panel image with fire extinguisher image
  */
 import { useEffect, useState, useCallback } from "react";
 import { ASSETS, WHATSAPP_URL } from "@/lib/constants";
 import { ChevronDown, ArrowRight } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
 
-const HERO_IMAGES = [ASSETS.heroBg1, ASSETS.heroBg2, ASSETS.heroBg3];
+// Replaced heroBg3 (alarm panel) with heroExtintor (fire extinguisher)
+const HERO_IMAGES = [ASSETS.heroBg1, ASSETS.heroExtintor, ASSETS.heroBg2];
 const INTERVAL = 7000;
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
     setLoaded(true);
@@ -102,24 +102,21 @@ export default function HeroSection() {
         >
           <span className="sr-only">Cavallini Engenharia e Assessoria de AVCB</span>
           <img
-            src={theme === "dark" ? ASSETS.logoBrancoDark : ASSETS.logoBrancoDark}
+            src={ASSETS.logoBrancoDark}
             alt="Cavallini Assessoria"
             className="w-auto h-auto max-w-[72vw] md:max-w-[480px] lg:max-w-[550px] max-h-[28vh] lg:max-h-[35vh] object-contain drop-shadow-[0_0_24px_rgba(255,255,255,0.12)] mx-auto"
             loading="eager"
           />
         </h1>
 
-        {/* Subtitle — the current h2 text */}
+        {/* Subtitle — updated text as requested */}
         <p
-          className={`text-base md:text-lg lg:text-xl font-sans text-stone-300 leading-relaxed font-light mx-auto max-w-[72vw] md:max-w-[520px] lg:max-w-[600px] mb-10 transition-all duration-1000 delay-400 ${
+          className={`text-base md:text-lg lg:text-xl font-sans text-stone-300 leading-relaxed font-light mx-auto max-w-[72vw] md:max-w-[580px] lg:max-w-[650px] mb-10 transition-all duration-1000 delay-400 ${
             loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          Assessoria, projeto, execução e regularização{" "}
-          <strong className="font-semibold text-white">completa</strong> junto ao
-          Corpo de Bombeiros.
-          <br className="hidden md:block" /> Segurança de ponta a ponta com rigor
-          técnico para empresas que não podem parar.
+          Assessoria completa em AVCB, projetos de engenharia e execução de
+          sistemas de combate a incêndio. Do diagnóstico à aprovação final.
         </p>
 
         {/* CTAs */}

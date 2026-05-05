@@ -9,6 +9,7 @@ export const ASSETS = {
   heroBg1: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-bg-1-aHrJipszL7MfUk4YnpSKRL.webp",
   heroBg2: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-bg-2-jTuby8AfG93jMA92VwwRA9.webp",
   heroBg3: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-bg-3-SF6naAr2atfQRxAkzg8Lzk.webp",
+  heroExtintor: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-extintor-7T58XkhipfLHYSFaksWgNi.webp",
   aboutBg: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/about-section-bg-6PAfJWyoL365PZhZ8xdwye.webp",
 
   // Original images (WebP optimized)
@@ -43,13 +44,13 @@ export const PARTNER_LOGOS = [
   { name: "Parceiro 2", src: "/manus-storage/parceiro-2_c4923d46.png" },
   { name: "Parceiro 3", src: "/manus-storage/parceiro-3_757615aa.png" },
   { name: "Parceiro 4", src: "/manus-storage/parceiro-4_5401ae06.png" },
-  { name: "Coco Bambu", src: "/manus-storage/coco-bambu_9a312342.png" },
-  { name: "F1", src: "/manus-storage/f1-logo_4f0af060.png" },
+  { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png" },
+  { name: "F1", src: "/manus-storage/f1-logo_f600a2bc.png" },
   { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png" },
   { name: "GL Events", src: "/manus-storage/gl-events-logo_c85a7e17.png" },
   { name: "MD", src: "/manus-storage/md-logo_e81ff46d.png" },
   { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png" },
-  { name: "Pontuall", src: "/manus-storage/pontuall-logo_987ee199.png" },
+  { name: "Pontuall", src: "/manus-storage/pontuall-clean_c6e2a96b.png" },
 ] as const;
 
 // ─── Navigation Links ───────────────────────────────────────
@@ -57,7 +58,7 @@ export const NAV_LINKS = [
   { label: "Home", href: "#hero" },
   { label: "Quem Somos", href: "#quem-somos" },
   { label: "Serviços", href: "#solucoes" },
-  { label: "FAQ", href: "#faq" },
+  { label: "FAQ", href: "/faq" },
   { label: "Contato", href: "#contato" },
 ] as const;
 
