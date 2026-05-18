@@ -1,176 +1,189 @@
 /*
- * AboutSection — "Quem Somos" with cinematic background and stats
- * Design: Split layout, P&B photography, orange accents, theme-aware
+ * AboutSection — Quem Somos
+ * Design: Split layout. Text left, image right. No rounded corners.
+ * No floating badge. No duplicate stats. Clean editorial.
  */
 import { ASSETS } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Shield, Target, Award, Users } from "lucide-react";
-
-const STATS = [
-  { icon: Shield, value: "500+", label: "Projetos Entregues" },
-  { icon: Target, value: "100%", label: "Taxa de Aprovação" },
-  { icon: Award, value: "10+", label: "Anos de Experiência" },
-  { icon: Users, value: "24h", label: "Atendimento" },
-];
 
 export default function AboutSection() {
-  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>();
-  const { ref: statsRef, isVisible: statsVisible } = useScrollReveal<HTMLDivElement>();
+  const { ref, isVisible } = useScrollReveal<HTMLElement>();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   return (
     <section
       id="quem-somos"
-      ref={sectionRef}
-      className={`relative py-24 md:py-32 overflow-hidden border-t ${
-        isDark ? "border-white/5" : "border-black/5"
-      }`}
+      ref={ref}
+      className="relative py-24 md:py-32"
+      style={{
+        backgroundColor: isDark ? "#0A0A0A" : "#F5F2EE",
+        borderTop: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(0,0,0,0.07)",
+      }}
       aria-label="Quem Somos"
     >
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={ASSETS.aboutBg}
-          alt=""
-          className={`w-full h-full object-cover grayscale ${isDark ? "opacity-20" : "opacity-8"}`}
-          loading="lazy"
-          aria-hidden="true"
-        />
-        <div className={`absolute inset-0 ${
-          isDark
-            ? "bg-gradient-to-b from-black via-black/90 to-black"
-            : "bg-gradient-to-b from-[var(--surface-primary)] via-[var(--surface-primary)]/95 to-[var(--surface-primary)]"
-        }`} />
-      </div>
+      <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-        {/* Section Header */}
-        <div
-          className={`mb-16 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          <div className="inline-flex items-center gap-3 mb-6">
-            <span className="w-8 h-[1px] bg-[#d93e15]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#d93e15] font-bold">
-              Quem Somos
-            </span>
-          </div>
-          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-tight max-w-3xl ${
-            isDark ? "text-white" : "text-stone-900"
-          }`}>
-            Engenharia de combate a incêndio com{" "}
-            <span className="text-[#d93e15]">
-              rigor técnico
-            </span>{" "}
-            e visão estratégica
-          </h2>
-        </div>
-
-        {/* Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          {/* Text Column */}
+          {/* Left — Text */}
           <div
-            className={`space-y-6 transition-all duration-1000 delay-200 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
+            className="space-y-8"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? "translateY(0)" : "translateY(24px)",
+              transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)",
+            }}
           >
-            <p className={`text-base md:text-lg leading-relaxed font-light ${
-              isDark ? "text-stone-300" : "text-stone-700"
-            }`}>
-              A Cavallini Assessoria é especializada em soluções completas de segurança
-              contra incêndio. Atuamos com foco em resultados, oferecendo desde a
-              consultoria inicial até a execução e aprovação final junto ao Corpo de
-              Bombeiros.
-            </p>
-            <p className={`text-base leading-relaxed font-light ${
-              isDark ? "text-stone-400" : "text-stone-600"
-            }`}>
-              Nossa equipe de engenheiros e técnicos qualificados garante que cada
-              projeto seja conduzido com o mais alto padrão de qualidade, cumprindo
-              rigorosamente todas as normas e regulamentações vigentes.
-            </p>
-            <p className={`text-base leading-relaxed font-light ${
-              isDark ? "text-stone-400" : "text-stone-600"
-            }`}>
-              Entendemos que segurança contra incêndio não é apenas uma obrigação legal
-              — é um compromisso com a vida. Por isso, tratamos cada projeto com a
-              seriedade e a dedicação que ele merece.
-            </p>
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-[1px] bg-[#D93E15] flex-shrink-0" />
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "0.6875rem",
+                  fontWeight: 500,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "#D93E15",
+                }}
+              >
+                Quem Somos
+              </span>
+            </div>
 
-            {/* Signature Quote */}
-            <blockquote className="border-l-2 border-[#d93e15] pl-6 mt-8">
-              <p className={`text-lg font-display font-medium italic ${
-                isDark ? "text-white/80" : "text-stone-800"
-              }`}>
+            {/* Heading */}
+            <h2
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)",
+                lineHeight: 1.12,
+                letterSpacing: "-0.02em",
+                color: isDark ? "#F0EDEA" : "#0F0F0F",
+                margin: 0,
+              }}
+            >
+              Engenharia de combate a incêndio com{" "}
+              <span style={{ color: "#D93E15" }}>rigor técnico</span>{" "}
+              e visão estratégica.
+            </h2>
+
+            {/* Body */}
+            <div className="space-y-4">
+              <p
+                style={{
+                  fontFamily: "'Urbanist', sans-serif",
+                  fontWeight: 300,
+                  fontSize: "1rem",
+                  lineHeight: 1.75,
+                  color: isDark ? "rgba(240,237,234,0.65)" : "rgba(15,15,15,0.65)",
+                  margin: 0,
+                }}
+              >
+                A Cavallini Assessoria é especializada em soluções completas de segurança
+                contra incêndio. Atuamos com foco em resultados — da consultoria inicial
+                à execução e aprovação final junto ao Corpo de Bombeiros.
+              </p>
+              <p
+                style={{
+                  fontFamily: "'Urbanist', sans-serif",
+                  fontWeight: 300,
+                  fontSize: "1rem",
+                  lineHeight: 1.75,
+                  color: isDark ? "rgba(240,237,234,0.5)" : "rgba(15,15,15,0.5)",
+                  margin: 0,
+                }}
+              >
+                Nossa equipe de engenheiros e técnicos qualificados garante que cada
+                projeto seja conduzido com o mais alto padrão de qualidade, cumprindo
+                rigorosamente todas as normas e regulamentações vigentes.
+              </p>
+            </div>
+
+            {/* Quote */}
+            <blockquote
+              style={{
+                borderLeft: "2px solid #D93E15",
+                paddingLeft: "1.25rem",
+                margin: 0,
+              }}
+            >
+              <p
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontWeight: 500,
+                  fontSize: "1.05rem",
+                  fontStyle: "italic",
+                  lineHeight: 1.5,
+                  color: isDark ? "rgba(240,237,234,0.8)" : "rgba(15,15,15,0.8)",
+                  margin: 0,
+                }}
+              >
                 "Segurança não se promete. Se comprova."
               </p>
-              <cite className={`text-sm font-mono mt-2 block not-italic ${
-                isDark ? "text-stone-500" : "text-stone-400"
-              }`}>
+              <cite
+                style={{
+                  display: "block",
+                  marginTop: "0.5rem",
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "0.7rem",
+                  fontStyle: "normal",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: isDark ? "rgba(240,237,234,0.3)" : "rgba(15,15,15,0.35)",
+                }}
+              >
                 — Cavallini Assessoria
               </cite>
             </blockquote>
           </div>
 
-          {/* Image Column */}
+          {/* Right — Image */}
           <div
-            className={`relative transition-all duration-1000 delay-400 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? "translateY(0)" : "translateY(24px)",
+              transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)",
+              transitionDelay: "0.2s",
+            }}
           >
-            <div className="relative rounded-lg overflow-hidden aspect-[4/3]">
+            <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
               <img
                 src={ASSETS.tresImgPeb}
                 alt="Equipe Cavallini em campo realizando vistoria técnica"
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                className="w-full h-full object-cover"
+                style={{ filter: "grayscale(100%)", transition: "filter 0.6s ease" }}
                 loading="lazy"
+                onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0%)")}
+                onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(100%)")}
               />
-              <div className={`absolute inset-0 ${
-                isDark
-                  ? "bg-gradient-to-t from-black/60 via-transparent to-transparent"
-                  : "bg-gradient-to-t from-white/40 via-transparent to-transparent"
-              }`} />
+              {/* Subtle overlay */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: isDark
+                    ? "linear-gradient(to bottom, transparent 60%, rgba(10,10,10,0.5) 100%)"
+                    : "linear-gradient(to bottom, transparent 60%, rgba(245,242,238,0.4) 100%)",
+                }}
+              />
             </div>
 
-            {/* Floating Badge */}
-            <div className="absolute -bottom-4 -left-4 bg-[#d93e15] text-white px-6 py-3 rounded-lg shadow-[0_0_30px_rgba(217,62,21,0.3)]">
-              <span className="text-2xl font-display font-bold">10+</span>
-              <span className="text-xs font-mono uppercase tracking-wider ml-2 opacity-80">
-                Anos
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Grid */}
-        <div
-          ref={statsRef}
-          className={`grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 pt-16 border-t transition-all duration-1000 ${
-            isDark ? "border-white/5" : "border-black/5"
-          } ${statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-        >
-          {STATS.map((stat, i) => (
-            <div
-              key={stat.label}
-              className="text-center group"
-              style={{ transitionDelay: `${i * 100}ms` }}
+            {/* Caption */}
+            <p
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.65rem",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: isDark ? "rgba(240,237,234,0.25)" : "rgba(15,15,15,0.3)",
+                marginTop: "0.75rem",
+                paddingLeft: "0.25rem",
+              }}
             >
-              <stat.icon className="w-6 h-6 text-[#d93e15] mx-auto mb-3 group-hover:scale-110 transition-transform" />
-              <div className={`text-3xl md:text-4xl font-display font-bold mb-1 ${
-                isDark ? "text-white" : "text-stone-900"
-              }`}>
-                {stat.value}
-              </div>
-              <div className={`text-xs font-mono uppercase tracking-widest ${
-                isDark ? "text-stone-500" : "text-stone-400"
-              }`}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
+              Equipe técnica em campo — vistoria e execução
+            </p>
+          </div>
         </div>
       </div>
     </section>

@@ -1,89 +1,150 @@
 /*
- * ServicesSection — Clickable service cards that navigate to individual pages
- * Design: Cards with image, hover effects, theme-aware colors
+ * ServicesSection — Cards de serviços clicáveis
+ * Design: Grid 2×2. Sem rounded corners. Imagem P&B → cor no hover.
+ * Número grande como elemento decorativo. Linha laranja no hover.
  */
 import { SERVICES } from "@/lib/constants";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { useTheme } from "@/contexts/ThemeContext";
 
-function ServiceCard({
-  service,
-  index,
-}: {
-  service: (typeof SERVICES)[number];
-  index: number;
-}) {
-  const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
+function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
   const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <Link href={`/servicos/${service.slug}`}>
       <div
-        ref={ref}
-        className={`group relative overflow-hidden rounded-lg border cursor-pointer transition-all duration-700 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-        } ${
-          theme === "dark"
-            ? "border-white/5 bg-[#0a0a0a] hover:border-[#d93e15]/20"
-            : "border-black/5 bg-white hover:border-[#d93e15]/30 shadow-sm hover:shadow-lg"
-        }`}
-        style={{ transitionDelay: `${index * 150}ms` }}
+        className="group relative overflow-hidden cursor-pointer"
+        style={{
+          opacity: 1,
+          backgroundColor: isDark ? "#111111" : "#FFFFFF",
+          border: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.08)",
+          animationDelay: `${index * 80}ms`,
+        }}
       >
+        {/* Top accent line — reveals on hover */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px] z-10 transition-transform duration-300 origin-left"
+          style={{
+            backgroundColor: "#D93E15",
+            transform: "scaleX(0)",
+          }}
+          ref={(el) => {
+            if (!el) return;
+            const parent = el.closest(".group");
+            if (!parent) return;
+            parent.addEventListener("mouseenter", () => { el.style.transform = "scaleX(1)"; });
+            parent.addEventListener("mouseleave", () => { el.style.transform = "scaleX(0)"; });
+          }}
+        />
+
         {/* Image */}
-        <div className="relative h-56 overflow-hidden">
+        <div className="relative overflow-hidden" style={{ height: "220px" }}>
           <img
             src={service.image}
             alt={service.title}
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.04]"
+            style={{ filter: "grayscale(100%)", transition: "filter 0.6s ease, transform 0.7s ease" }}
             loading="lazy"
+            onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0%)")}
+            onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(100%)")}
           />
-          <div className={`absolute inset-0 ${
-            theme === "dark"
-              ? "bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent"
-              : "bg-gradient-to-t from-white via-white/30 to-transparent"
-          }`} />
-
-          {/* Number */}
-          <span className={`absolute top-4 right-4 text-6xl font-display font-bold transition-colors duration-500 ${
-            theme === "dark"
-              ? "text-white/5 group-hover:text-[#d93e15]/10"
-              : "text-black/5 group-hover:text-[#d93e15]/10"
-          }`}>
+          {/* Number watermark */}
+          <span
+            className="absolute top-3 right-4 font-display font-bold select-none pointer-events-none"
+            style={{
+              fontSize: "5rem",
+              lineHeight: 1,
+              color: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)",
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}
+            aria-hidden="true"
+          >
             {service.number}
           </span>
         </div>
 
         {/* Content */}
-        <div className="p-6 md:p-8">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-[10px] font-mono text-[#d93e15] uppercase tracking-widest font-bold">
+        <div className="p-7">
+          {/* Number + line */}
+          <div className="flex items-center gap-3 mb-4">
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.65rem",
+                fontWeight: 500,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: "#D93E15",
+              }}
+            >
               {service.number}
             </span>
-            <span className="w-6 h-[1px] bg-[#d93e15]/30" />
+            <span
+              style={{
+                width: "1.5rem",
+                height: "1px",
+                backgroundColor: "rgba(217,62,21,0.3)",
+                flexShrink: 0,
+              }}
+            />
           </div>
 
-          <h3 className={`text-xl md:text-2xl font-display font-medium mb-1 transition-colors ${
-            theme === "dark" ? "text-white" : "text-stone-900"
-          }`}>
+          <h3
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 500,
+              fontSize: "1.25rem",
+              letterSpacing: "-0.01em",
+              lineHeight: 1.2,
+              color: isDark ? "#F0EDEA" : "#0F0F0F",
+              marginBottom: "0.25rem",
+            }}
+          >
             {service.title}
           </h3>
-          <p className={`text-xs font-mono uppercase tracking-wider mb-4 ${
-            theme === "dark" ? "text-stone-500" : "text-stone-400"
-          }`}>
+
+          <p
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.65rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: isDark ? "rgba(240,237,234,0.3)" : "rgba(15,15,15,0.35)",
+              marginBottom: "1rem",
+            }}
+          >
             {service.subtitle}
           </p>
-          <p className={`text-sm leading-relaxed mb-6 font-light ${
-            theme === "dark" ? "text-stone-400" : "text-stone-600"
-          }`}>
+
+          <p
+            style={{
+              fontFamily: "'Urbanist', sans-serif",
+              fontWeight: 300,
+              fontSize: "0.9rem",
+              lineHeight: 1.7,
+              color: isDark ? "rgba(240,237,234,0.5)" : "rgba(15,15,15,0.55)",
+              marginBottom: "1.5rem",
+            }}
+          >
             {service.description}
           </p>
 
           {/* CTA */}
-          <span className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-[#d93e15] group-hover:gap-3 transition-all">
+          <span
+            className="inline-flex items-center gap-2 group-hover:gap-3 transition-all duration-200"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.65rem",
+              fontWeight: 500,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "#D93E15",
+            }}
+          >
             Saiba Mais
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
           </span>
         </div>
       </div>
@@ -92,55 +153,57 @@ function ServiceCard({
 }
 
 export default function ServicesSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>();
   const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
     <section
       id="solucoes"
-      ref={ref}
-      className={`relative py-20 md:py-28 overflow-hidden border-t ${
-        theme === "dark" ? "border-white/5" : "border-black/5"
-      }`}
-      style={{ backgroundColor: theme === "dark" ? undefined : "var(--surface-secondary)" }}
+      className="relative py-24 md:py-32"
+      style={{
+        backgroundColor: isDark ? "#0A0A0A" : "#F5F2EE",
+        borderTop: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(0,0,0,0.07)",
+      }}
       aria-label="Nossos Serviços"
     >
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(217,62,21,0.03)_0%,transparent_60%)]" />
-      </div>
+      <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-12">
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-        {/* Section Header */}
-        <div
-          className={`mb-16 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          <div className="inline-flex items-center gap-3 mb-6">
-            <span className="w-8 h-[1px] bg-[#d93e15]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#d93e15] font-bold">
+        {/* Header */}
+        <div className="mb-14">
+          <div className="flex items-center gap-3 mb-5">
+            <span className="w-6 h-[1px] bg-[#D93E15] flex-shrink-0" />
+            <span
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.6875rem",
+                fontWeight: 500,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "#D93E15",
+              }}
+            >
               Soluções
             </span>
           </div>
-          <h2 className={`text-3xl sm:text-4xl md:text-5xl font-display font-medium leading-tight max-w-3xl ${
-            theme === "dark" ? "text-white" : "text-stone-900"
-          }`}>
+          <h2
+            style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 500,
+              fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)",
+              lineHeight: 1.12,
+              letterSpacing: "-0.02em",
+              color: isDark ? "#F0EDEA" : "#0F0F0F",
+              maxWidth: "36rem",
+              margin: 0,
+            }}
+          >
             Soluções completas em{" "}
-            <span className="text-[#d93e15]">
-              segurança contra incêndio
-            </span>
+            <span style={{ color: "#D93E15" }}>segurança contra incêndio</span>.
           </h2>
-          <p className={`text-base md:text-lg mt-4 max-w-2xl font-light ${
-            theme === "dark" ? "text-stone-400" : "text-stone-600"
-          }`}>
-            Do diagnóstico à aprovação final. Cada etapa conduzida com rigor técnico
-            e acompanhamento total.
-          </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+        {/* Grid */}
+        <div className="grid md:grid-cols-2 gap-5 lg:gap-6">
           {SERVICES.map((service, i) => (
             <ServiceCard key={service.id} service={service} index={i} />
           ))}

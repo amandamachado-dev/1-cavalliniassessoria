@@ -1,65 +1,107 @@
 /*
- * PartnersSection — Partner logos grid, theme-aware
- * Design: Static grid with uniform logo sizes, visible in both dark and light modes
- * Each logo is displayed in a card with consistent sizing
+ * PartnersSection — Logos de parceiros
+ * Design: Fundo branco puro (light) / preto profundo (dark) — contraste máximo com a página.
+ * Grid editorial com células separadas por bordas sutis.
+ * Logos sempre visíveis, sem dependência de IntersectionObserver.
  */
 import { PARTNER_LOGOS } from "@/lib/constants";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useRef } from "react";
 
 export default function PartnersSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>();
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
+  // Contraste deliberado com o fundo da página
+  const bg = isDark ? "#000000" : "#FFFFFF";
+  const borderColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)";
+  const textPrimary = isDark ? "#F0EDEA" : "#0F0F0F";
+  const textMuted = isDark ? "rgba(240,237,234,0.35)" : "rgba(15,15,15,0.4)";
+
   return (
     <section
-      ref={ref}
-      className={`relative py-16 md:py-24 border-t ${
-        isDark ? "border-white/5 bg-[#050505]" : "border-black/8 bg-stone-100"
-      }`}
       aria-label="Parceiros e Clientes"
+      style={{
+        backgroundColor: bg,
+        borderTop: `1px solid ${borderColor}`,
+        borderBottom: `1px solid ${borderColor}`,
+        padding: "5rem 1.25rem 4.5rem",
+      }}
     >
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+      <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
         {/* Header */}
         <div
-          className={`text-center mb-12 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "1rem",
+            marginBottom: "3.5rem",
+          }}
         >
-          <div className="inline-flex items-center gap-3 mb-4">
-            <span className="w-8 h-[1px] bg-[#d93e15]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#d93e15] font-bold">
-              Prova Social
-            </span>
-            <span className="w-8 h-[1px] bg-[#d93e15]" />
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
+              <span style={{ width: "1.5rem", height: "1px", backgroundColor: "#D93E15", flexShrink: 0 }} />
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: "0.6875rem",
+                  fontWeight: 500,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "#D93E15",
+                }}
+              >
+                Parceiros
+              </span>
+            </div>
+            <h2
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 500,
+                fontSize: "clamp(1.5rem, 2.8vw, 2.25rem)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1.15,
+                color: textPrimary,
+                margin: 0,
+              }}
+            >
+              Quem confia na{" "}
+              <span style={{ color: "#D93E15" }}>Cavallini</span>
+            </h2>
           </div>
-          <h2
-            className={`text-2xl sm:text-3xl md:text-4xl font-display font-medium ${
-              isDark ? "text-white" : "text-stone-900"
-            }`}
+          <p
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.6rem",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: textMuted,
+              margin: 0,
+            }}
           >
-            Quem confia na{" "}
-            <span className="text-[#d93e15]">Cavallini</span>
-          </h2>
-          <p className={`text-sm mt-3 font-light ${isDark ? "text-stone-500" : "text-stone-500"}`}>
-            Empresas e organizações que confiam em nossa expertise
+            Clientes em diversas regiões do Brasil
           </p>
         </div>
 
         {/* Logos Grid */}
         <div
-          className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 md:gap-6 transition-all duration-1000 delay-200 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+            borderTop: `1px solid ${borderColor}`,
+            borderLeft: `1px solid ${borderColor}`,
+          }}
         >
           {PARTNER_LOGOS.map((logo, i) => (
-            <PartnerLogoCard
+            <LogoCell
               key={logo.name}
               name={logo.name}
               src={logo.src}
               isDark={isDark}
-              index={i}
+              borderColor={borderColor}
+              bg={bg}
             />
           ))}
         </div>
@@ -68,51 +110,84 @@ export default function PartnersSection() {
   );
 }
 
-function PartnerLogoCard({
+function LogoCell({
   name,
   src,
   isDark,
-  index,
+  borderColor,
+  bg,
 }: {
   name: string;
   src: string;
   isDark: boolean;
-  index: number;
+  borderColor: string;
+  bg: string;
 }) {
-  // Determine filter based on theme
-  // In dark mode: invert to white so logos are visible on dark bg
-  // In light mode: darken logos so they're visible on light bg
-  const filter = isDark
-    ? "brightness(0) invert(1)"
-    : "brightness(0) contrast(1)";
+  const imgRef = useRef<HTMLImageElement>(null);
+  const cellRef = useRef<HTMLDivElement>(null);
+
+  // No dark mode: logos em branco (invert). No light mode: logos em preto (brightness 0).
+  // Ambos com boa opacidade para serem claramente visíveis.
+  const defaultFilter = isDark
+    ? "grayscale(100%) brightness(0) invert(1)"
+    : "grayscale(100%) brightness(0)";
+  const defaultOpacity = "0.65";
+
+  const handleEnter = () => {
+    if (imgRef.current) {
+      imgRef.current.style.filter = "none";
+      imgRef.current.style.opacity = "1";
+    }
+    if (cellRef.current) {
+      cellRef.current.style.backgroundColor = isDark
+        ? "rgba(255,255,255,0.04)"
+        : "rgba(0,0,0,0.03)";
+    }
+  };
+
+  const handleLeave = () => {
+    if (imgRef.current) {
+      imgRef.current.style.filter = defaultFilter;
+      imgRef.current.style.opacity = defaultOpacity;
+    }
+    if (cellRef.current) {
+      cellRef.current.style.backgroundColor = "transparent";
+    }
+  };
 
   return (
     <div
-      className={`group flex items-center justify-center rounded-lg p-4 transition-all duration-300 cursor-default ${
-        isDark
-          ? "bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15"
-          : "bg-white hover:bg-stone-50 border border-stone-200 hover:border-stone-300 shadow-sm hover:shadow-md"
-      }`}
-      style={{ transitionDelay: `${index * 50}ms` }}
+      ref={cellRef}
       title={name}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2.5rem 1.75rem",
+        borderRight: `1px solid ${borderColor}`,
+        borderBottom: `1px solid ${borderColor}`,
+        cursor: "default",
+        backgroundColor: "transparent",
+        transition: "background-color 0.2s ease",
+        minHeight: "100px",
+      }}
     >
       <img
+        ref={imgRef}
         src={src}
         alt={`Logo ${name}`}
-        className="w-full h-10 object-contain transition-all duration-500 group-hover:scale-105"
-        style={{
-          filter: filter,
-          opacity: isDark ? 0.7 : 0.65,
-          maxWidth: "120px",
-        }}
         loading="lazy"
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLImageElement).style.filter = "none";
-          (e.currentTarget as HTMLImageElement).style.opacity = "1";
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLImageElement).style.filter = filter;
-          (e.currentTarget as HTMLImageElement).style.opacity = isDark ? "0.7" : "0.65";
+        style={{
+          width: "100%",
+          height: "2.5rem",
+          objectFit: "contain",
+          filter: defaultFilter,
+          opacity: defaultOpacity,
+          transition: "filter 0.3s ease, opacity 0.3s ease",
+          maxWidth: "120px",
+          display: "block",
         }}
       />
     </div>

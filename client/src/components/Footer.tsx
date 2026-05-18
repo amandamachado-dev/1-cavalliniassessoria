@@ -1,185 +1,234 @@
 /*
- * Footer — Premium footer with giant "CAVALLINI" watermark in background
- * Design: Faithful recreation of the original footer with 3-column layout,
- * giant brand name watermark, hover "/" prefix on nav links, and gradient divider
+ * Footer — Watermark CAVALLINI + 3 colunas + bottom bar
+ * Design: Fundo quase preto. Watermark gigante. Sem ornamentos.
+ * Tipografia coerente com o resto do site.
  */
-import { ASSETS, NAV_LINKS, WHATSAPP_URL } from "@/lib/constants";
+import { NAV_LINKS, WHATSAPP_URL } from "@/lib/constants";
 import { useTheme } from "@/contexts/ThemeContext";
 import { ArrowUp, Phone, Mail, MapPin } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Footer() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const bg = isDark ? "#050505" : "#EDEAE6";
+  const textPrimary = isDark ? "#F0EDEA" : "#0F0F0F";
+  const textSecondary = isDark ? "rgba(240,237,234,0.4)" : "rgba(15,15,15,0.45)";
+  const borderColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
 
-  const handleNavClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
-    e.preventDefault();
-    const id = href.replace("#", "");
-    const el = document.getElementById(id);
-    if (el) {
-      window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const el = document.getElementById(href.replace("#", ""));
+      if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
     }
   };
 
   return (
     <footer
-      className={`relative w-full pt-24 lg:pt-32 pb-8 overflow-hidden z-20 border-t ${
-        isDark
-          ? "border-white/5 bg-[#030303]"
-          : "border-stone-200 bg-stone-100"
-      }`}
-      role="contentinfo"
       id="footer"
+      role="contentinfo"
+      style={{
+        position: "relative",
+        backgroundColor: bg,
+        borderTop: `1px solid ${borderColor}`,
+        overflow: "hidden",
+        paddingTop: "5rem",
+        paddingBottom: "2rem",
+      }}
     >
-      {/* ─── GIANT WATERMARK "CAVALLINI" ─── */}
+      {/* Watermark */}
       <div
-        className="absolute bottom-[-2%] md:bottom-[-5%] left-0 w-full flex justify-center items-end pointer-events-none z-0 select-none overflow-hidden h-full"
         aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: "-2%",
+          left: 0,
+          right: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-end",
+          pointerEvents: "none",
+          userSelect: "none",
+          overflow: "hidden",
+          height: "100%",
+        }}
       >
         <span
-          className={`font-display font-bold text-[22vw] md:text-[16vw] leading-[0.75] tracking-tighter whitespace-nowrap ${
-            isDark ? "text-white opacity-[0.04]" : "text-black opacity-[0.04]"
-          }`}
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontWeight: 800,
+            fontSize: "clamp(14vw, 18vw, 22vw)",
+            lineHeight: 0.78,
+            letterSpacing: "-0.04em",
+            whiteSpace: "nowrap",
+            color: isDark ? "rgba(255,255,255,0.035)" : "rgba(0,0,0,0.04)",
+          }}
         >
           CAVALLINI
         </span>
       </div>
 
-      {/* ─── MAIN CONTENT ─── */}
-      <div className="max-w-[1240px] mx-auto px-6 md:px-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-24">
-          {/* Column 1: Institutional Description */}
-          <div className="md:col-span-12 lg:col-span-4 flex flex-col items-start pr-0 md:pr-10 mt-2">
+      {/* Content */}
+      <div
+        style={{
+          maxWidth: "1320px",
+          margin: "0 auto",
+          padding: "0 1.25rem 0",
+          position: "relative",
+          zIndex: 10,
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "3rem",
+            marginBottom: "4rem",
+          }}
+        >
+          {/* Col 1 — Institutional */}
+          <div>
             <h3
-              className={`font-display font-semibold text-xl md:text-2xl tracking-tight mb-4 ${
-                isDark ? "text-white" : "text-stone-900"
-              }`}
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 500,
+                fontSize: "1.05rem",
+                letterSpacing: "-0.01em",
+                color: textPrimary,
+                marginBottom: "0.75rem",
+              }}
             >
               Cavallini Assessoria
             </h3>
             <p
-              className={`font-light text-sm leading-relaxed ${
-                isDark ? "text-stone-400" : "text-stone-500"
-              }`}
+              style={{
+                fontFamily: "'Urbanist', sans-serif",
+                fontWeight: 300,
+                fontSize: "0.85rem",
+                lineHeight: 1.7,
+                color: textSecondary,
+                maxWidth: "22rem",
+              }}
             >
-              Especialistas em segurança contra incêndio, oferecendo soluções
-              completas para aprovação e conformidade rigorosa junto ao Corpo de
-              Bombeiros.
+              Especialistas em segurança contra incêndio — soluções completas
+              para aprovação e conformidade junto ao Corpo de Bombeiros.
             </p>
           </div>
 
-          {/* Column 2: Quick Navigation */}
-          <div className="md:col-span-6 lg:col-span-3 lg:pl-12">
+          {/* Col 2 — Navigation */}
+          <div>
             <h4
-              className={`text-[10px] font-mono uppercase tracking-widest mb-8 font-semibold ${
-                isDark ? "text-stone-600" : "text-stone-400"
-              }`}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.6rem",
+                fontWeight: 500,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: textSecondary,
+                marginBottom: "1.5rem",
+              }}
             >
               Navegação
             </h4>
             <nav aria-label="Links do rodapé">
-              <ul className="space-y-4">
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.85rem" }}>
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => handleNavClick(e, link.href)}
-                      className={`text-sm font-light transition-colors relative group w-max flex items-center ${
-                        isDark
-                          ? "text-stone-400 hover:text-white"
-                          : "text-stone-500 hover:text-stone-900"
-                      }`}
-                    >
-                      <span className="absolute -left-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-[#d93e15] text-xs font-mono">
-                        /
-                      </span>
-                      {link.label}
-                    </a>
+                    {link.href.startsWith("/") ? (
+                      <Link
+                        href={link.href}
+                        style={{
+                          fontFamily: "'Urbanist', sans-serif",
+                          fontWeight: 300,
+                          fontSize: "0.875rem",
+                          color: textSecondary,
+                          textDecoration: "none",
+                          transition: "color 0.2s ease",
+                          display: "inline-block",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#D93E15")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = textSecondary)}
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        onClick={(e) => handleAnchorClick(e, link.href)}
+                        style={{
+                          fontFamily: "'Urbanist', sans-serif",
+                          fontWeight: 300,
+                          fontSize: "0.875rem",
+                          color: textSecondary,
+                          textDecoration: "none",
+                          transition: "color 0.2s ease",
+                          display: "inline-block",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#D93E15")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = textSecondary)}
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
             </nav>
           </div>
 
-          {/* Column 3: Direct Contact */}
-          <div className="md:col-span-6 lg:col-span-5 lg:pl-12">
+          {/* Col 3 — Contact */}
+          <div>
             <h4
-              className={`text-[10px] font-mono uppercase tracking-widest mb-8 font-semibold ${
-                isDark ? "text-stone-600" : "text-stone-400"
-              }`}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: "0.6rem",
+                fontWeight: 500,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: textSecondary,
+                marginBottom: "1.5rem",
+              }}
             >
               Contato Direto
             </h4>
-            <ul className="space-y-5">
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "1rem" }}>
               <li>
                 <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-4 w-max"
+                  style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none" }}
+                  onMouseEnter={(e) => { const span = e.currentTarget.querySelector("span") as HTMLElement; if (span) span.style.color = textPrimary; }}
+                  onMouseLeave={(e) => { const span = e.currentTarget.querySelector("span") as HTMLElement; if (span) span.style.color = textSecondary; }}
                 >
-                  <Phone
-                    className={`w-5 h-5 transition-colors ${
-                      isDark
-                        ? "text-stone-600 group-hover:text-[#d93e15]"
-                        : "text-stone-400 group-hover:text-[#d93e15]"
-                    }`}
-                  />
-                  <span
-                    className={`text-sm font-light transition-colors border-b border-transparent group-hover:border-current pb-0.5 ${
-                      isDark
-                        ? "text-stone-400 group-hover:text-white"
-                        : "text-stone-500 group-hover:text-stone-900"
-                    }`}
-                  >
-                    (11) 99999-9999
+                  <Phone style={{ width: "0.9rem", height: "0.9rem", color: "#D93E15", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 300, fontSize: "0.85rem", color: textSecondary, transition: "color 0.2s ease" }}>
+                    (11) 95400-4989
                   </span>
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:contato@cavalliniassessoria.com.br"
-                  className="group flex items-center gap-4 w-max"
+                  style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none" }}
+                  onMouseEnter={(e) => { const span = e.currentTarget.querySelector("span") as HTMLElement; if (span) span.style.color = textPrimary; }}
+                  onMouseLeave={(e) => { const span = e.currentTarget.querySelector("span") as HTMLElement; if (span) span.style.color = textSecondary; }}
                 >
-                  <Mail
-                    className={`w-5 h-5 transition-colors ${
-                      isDark
-                        ? "text-stone-600 group-hover:text-[#d93e15]"
-                        : "text-stone-400 group-hover:text-[#d93e15]"
-                    }`}
-                  />
-                  <span
-                    className={`text-sm font-light transition-colors border-b border-transparent group-hover:border-current pb-0.5 ${
-                      isDark
-                        ? "text-stone-400 group-hover:text-white"
-                        : "text-stone-500 group-hover:text-stone-900"
-                    }`}
-                  >
+                  <Mail style={{ width: "0.9rem", height: "0.9rem", color: "#D93E15", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 300, fontSize: "0.85rem", color: textSecondary, transition: "color 0.2s ease" }}>
                     contato@cavallini.com.br
                   </span>
                 </a>
               </li>
               <li>
-                <div className="group flex items-center gap-4 w-max mt-2">
-                  <MapPin
-                    className={`w-5 h-5 transition-colors ${
-                      isDark
-                        ? "text-stone-600 group-hover:text-[#d93e15]"
-                        : "text-stone-400 group-hover:text-[#d93e15]"
-                    }`}
-                  />
-                  <span
-                    className={`text-sm font-light ${
-                      isDark ? "text-stone-400" : "text-stone-500"
-                    }`}
-                  >
-                    São Paulo, SP - Brasil
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <MapPin style={{ width: "0.9rem", height: "0.9rem", color: "#D93E15", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 300, fontSize: "0.85rem", color: textSecondary }}>
+                    São Paulo, SP — Brasil
                   </span>
                 </div>
               </li>
@@ -187,47 +236,56 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ─── PREMIUM GRADIENT DIVIDER ─── */}
-        <div
-          className={`h-px w-full bg-gradient-to-r from-transparent to-transparent ${
-            isDark ? "via-white/10" : "via-black/10"
-          }`}
-        />
+        {/* Divider */}
+        <div style={{ height: "1px", backgroundColor: borderColor }} />
 
-        {/* ─── BOTTOM BAR ─── */}
-        <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-4 relative z-20 pb-4">
+        {/* Bottom bar */}
+        <div
+          style={{
+            marginTop: "1.5rem",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1rem",
+          }}
+        >
           <p
-            className={`text-[10px] md:text-xs font-mono tracking-widest uppercase ${
-              isDark ? "text-stone-500" : "text-stone-400"
-            }`}
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.6rem",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: textSecondary,
+              margin: 0,
+            }}
           >
-            &copy; {new Date().getFullYear()} Cavallini Assessoria. Todos os
-            direitos reservados.
+            &copy; {new Date().getFullYear()} Cavallini Assessoria. Todos os direitos reservados.
           </p>
-          <div className="flex items-center gap-6">
-            {/* Status indicator */}
-            <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-[#d93e15] animate-pulse shadow-[0_0_10px_#d93e15]" />
-              <span
-                className={`text-xs font-mono uppercase tracking-widest font-bold ${
-                  isDark ? "text-white" : "text-stone-800"
-                }`}
-              >
-                v2.0
-              </span>
-            </div>
-            {/* Back to top */}
-            <button
-              onClick={scrollToTop}
-              className={`flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-colors hover:text-[#d93e15] ${
-                isDark ? "text-stone-500" : "text-stone-400"
-              }`}
-              aria-label="Voltar ao topo"
-            >
-              Voltar ao topo
-              <ArrowUp className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          <button
+            onClick={scrollToTop}
+            aria-label="Voltar ao topo"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "0.6rem",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: textSecondary,
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              transition: "color 0.2s ease",
+              padding: 0,
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#D93E15")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = textSecondary)}
+          >
+            Voltar ao topo
+            <ArrowUp style={{ width: "0.75rem", height: "0.75rem" }} />
+          </button>
         </div>
       </div>
     </footer>

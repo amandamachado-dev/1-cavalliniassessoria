@@ -1,177 +1,163 @@
 /*
- * HeroSection — Fullscreen centered hero with large logo + subtitle only
- * Design: Large CAVALLINI logo centered, subtitle below, fullscreen image carousel
- * Hero stays dark in both light and dark modes (per original behavior)
- * Updated: replaced alarm panel image with fire extinguisher image
+ * HeroSection — Fullscreen centered hero
+ * Design: Cinematic crossfade. Logo dominant. Minimal text. Clean.
+ * No noise texture. No grafismo. No rounded buttons. Pure authority.
  */
 import { useEffect, useState, useCallback } from "react";
 import { ASSETS, WHATSAPP_URL } from "@/lib/constants";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-// Replaced heroBg3 (alarm panel) with heroExtintor (fire extinguisher)
-const HERO_IMAGES = [ASSETS.heroBg1, ASSETS.heroExtintor, ASSETS.heroBg2];
-const INTERVAL = 7000;
+const HERO_IMAGES = [
+  { src: ASSETS.heroExtintor, alt: "Extintor de incêndio Cavallini" },
+  { src: ASSETS.heroBg1, alt: "Engenharia de combate a incêndio" },
+  { src: ASSETS.heroBg2, alt: "Segurança contra incêndio" },
+  { src: ASSETS.heroBg3, alt: "Projetos e execução Cavallini" },
+];
+
+const INTERVAL = 6000;
 
 export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [loaded, setLoaded] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [entered, setEntered] = useState(false);
 
   useEffect(() => {
-    setLoaded(true);
+    const t = setTimeout(() => setEntered(true), 100);
+    return () => clearTimeout(t);
   }, []);
 
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
+  const advance = useCallback(() => {
+    setCurrent(c => (c + 1) % HERO_IMAGES.length);
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, INTERVAL);
-    return () => clearInterval(timer);
-  }, [nextSlide]);
-
-  const scrollToContent = () => {
-    const el = document.getElementById("quem-somos");
-    if (el) {
-      window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
-    }
-  };
+    const t = setInterval(advance, INTERVAL);
+    return () => clearInterval(t);
+  }, [advance]);
 
   return (
     <section
       id="hero"
-      className="relative w-full min-h-[100svh] flex flex-col justify-center items-center overflow-hidden bg-black"
-      aria-label="Seção principal"
+      className="relative w-full min-h-[100svh] flex flex-col justify-center items-center overflow-hidden bg-[#0A0A0A]"
+      aria-label="Cavallini Assessoria — Engenharia de Combate a Incêndio"
     >
       {/* Background Carousel */}
-      {HERO_IMAGES.map((src, i) => (
+      {HERO_IMAGES.map((img, i) => (
         <div
-          key={i}
-          className="absolute inset-0 z-0 transition-all duration-[2500ms] ease-in-out"
-          style={{
-            opacity: currentSlide === i ? 1 : 0,
-            transform: currentSlide === i ? "scale(1)" : "scale(1.08)",
-          }}
+          key={img.src}
+          className="absolute inset-0 transition-opacity duration-[2000ms] ease-in-out"
+          style={{ opacity: current === i ? 1 : 0 }}
+          aria-hidden="true"
         >
           <img
-            src={src}
-            alt=""
+            src={img.src}
+            alt={img.alt}
             className="w-full h-full object-cover"
             loading={i === 0 ? "eager" : "lazy"}
-            aria-hidden="true"
           />
         </div>
       ))}
 
-      {/* Cinematic Overlays — always dark */}
-      <div className="absolute inset-0 z-[1] bg-black/60" />
-      <div className="absolute inset-0 z-[1] bg-gradient-to-t from-black via-transparent to-black/50" />
-
-      {/* Noise texture overlay */}
+      {/* Overlay — darkens for legibility */}
       <div
-        className="absolute inset-0 z-[1] opacity-[0.04] mix-blend-overlay pointer-events-none"
+        className="absolute inset-0 z-[1]"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.52) 0%, rgba(0,0,0,0.28) 45%, rgba(0,0,0,0.45) 75%, rgba(0,0,0,0.72) 100%)",
         }}
         aria-hidden="true"
       />
 
-      {/* Grafismo da Marca */}
-      <div
-        className="absolute bottom-0 right-0 w-[500px] h-[500px] md:w-[700px] md:h-[700px] lg:w-[900px] lg:h-[900px] opacity-[0.04] pointer-events-none translate-x-[15%] translate-y-[20%] z-[2]"
-        style={{
-          backgroundColor: "#d93e15",
-          maskImage: `url(${ASSETS.grafismo})`,
-          WebkitMaskImage: `url(${ASSETS.grafismo})`,
-          maskSize: "contain",
-          WebkitMaskSize: "contain",
-          maskRepeat: "no-repeat",
-          WebkitMaskRepeat: "no-repeat",
-          maskPosition: "right bottom",
-          WebkitMaskPosition: "right bottom",
-        }}
-        aria-hidden="true"
-      />
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 w-full max-w-3xl mx-auto">
 
-      {/* Centered Content — Logo + Subtitle only */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center text-center px-6 md:px-12">
-        {/* Large Logo — primary visual element */}
-        <h1
-          className={`mb-8 md:mb-10 transition-all duration-1000 delay-200 ${
-            loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+        {/* Logo */}
+        <div
+          style={{
+            opacity: entered ? 1 : 0,
+            transform: entered ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)",
+            transitionDelay: "0.15s",
+          }}
         >
-          <span className="sr-only">Cavallini Engenharia e Assessoria de AVCB</span>
+          <h1 className="sr-only">Cavallini Assessoria — Engenharia de Combate a Incêndio</h1>
           <img
             src={ASSETS.logoBrancoDark}
             alt="Cavallini Assessoria"
-            className="w-auto h-auto max-w-[72vw] md:max-w-[480px] lg:max-w-[550px] max-h-[28vh] lg:max-h-[35vh] object-contain drop-shadow-[0_0_24px_rgba(255,255,255,0.12)] mx-auto"
+            className="w-auto mx-auto mb-7"
+            style={{ height: "clamp(56px, 9vw, 108px)" }}
             loading="eager"
           />
-        </h1>
+        </div>
 
-        {/* Subtitle — updated text as requested */}
+        {/* Subtitle */}
         <p
-          className={`text-base md:text-lg lg:text-xl font-sans text-stone-300 leading-relaxed font-light mx-auto max-w-[72vw] md:max-w-[580px] lg:max-w-[650px] mb-10 transition-all duration-1000 delay-400 ${
-            loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className="text-white/75 font-light leading-relaxed"
+          style={{
+            fontFamily: "'Urbanist', sans-serif",
+            fontSize: "clamp(0.875rem, 1.6vw, 1.05rem)",
+            maxWidth: "38rem",
+            marginBottom: "2.5rem",
+            opacity: entered ? 1 : 0,
+            transform: entered ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)",
+            transitionDelay: "0.3s",
+          }}
         >
-          Assessoria completa em AVCB, projetos de engenharia e execução de
-          sistemas de combate a incêndio. Do diagnóstico à aprovação final.
+          Assessoria completa em AVCB, projetos de engenharia e execução de sistemas de combate a incêndio.{" "}
+          <span className="text-white/50">Do diagnóstico à aprovação final.</span>
         </p>
 
         {/* CTAs */}
         <div
-          className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-1000 delay-600 ${
-            loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className="flex flex-col sm:flex-row items-center gap-3"
+          style={{
+            opacity: entered ? 1 : 0,
+            transform: entered ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)",
+            transitionDelay: "0.45s",
+          }}
         >
-          {/* Primary CTA */}
           <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group w-[72vw] sm:w-auto flex items-center justify-center gap-3 bg-[#d93e15] text-white text-[13px] font-mono font-bold px-8 py-4 rounded-md uppercase tracking-wider shadow-[0_0_20px_rgba(217,62,21,0.3)] hover:shadow-[0_0_40px_rgba(217,62,21,0.5)] hover:bg-[#e8491f] transition-all duration-300"
+            href="#solucoes"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("solucoes")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-2.5 bg-[#D93E15] text-white text-[11px] font-mono uppercase tracking-[0.14em] px-8 py-4 hover:bg-[#C03510] transition-colors duration-200"
           >
-            <span>Solicitar AVCB</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            Solicitar AVCB
+            <ArrowRight className="w-3.5 h-3.5" />
           </a>
-
-          {/* Secondary CTA */}
           <a
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-[72vw] sm:w-auto flex items-center justify-center gap-3 border border-white/20 bg-white/5 text-white text-[13px] font-semibold px-8 py-4 rounded-md uppercase tracking-wider backdrop-blur-sm hover:border-white/50 hover:bg-white/10 transition-all duration-300"
+            className="inline-flex items-center gap-2.5 text-white/70 text-[11px] font-mono uppercase tracking-[0.14em] px-8 py-4 border border-white/18 hover:border-white/40 hover:text-white transition-all duration-200"
           >
             Falar com Especialista
           </a>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <button
-        onClick={scrollToContent}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/40 hover:text-white/70 transition-colors opacity-50 pointer-events-auto"
-        aria-label="Rolar para baixo"
-      >
-        <span className="text-[9px] font-mono uppercase tracking-[0.2em]">Scroll</span>
-        <div className="w-[1px] h-10 bg-gradient-to-b from-[#d93e15] to-transparent overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-1/2 bg-white animate-bounce" />
-        </div>
-      </button>
-
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 right-8 z-10 hidden md:flex items-center gap-2">
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10"
+        aria-hidden="true"
+      >
         {HERO_IMAGES.map((_, i) => (
           <button
             key={i}
-            onClick={() => setCurrentSlide(i)}
-            className={`h-[2px] transition-all duration-500 ${
-              currentSlide === i
-                ? "w-8 bg-[#d93e15]"
-                : "w-4 bg-white/20 hover:bg-white/40"
-            }`}
-            aria-label={`Ir para slide ${i + 1}`}
+            onClick={() => setCurrent(i)}
+            aria-label={`Slide ${i + 1}`}
+            style={{
+              width: i === current ? "2rem" : "0.375rem",
+              height: "2px",
+              backgroundColor: i === current ? "#D93E15" : "rgba(255,255,255,0.25)",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              transition: "width 0.4s ease, background-color 0.4s ease",
+            }}
           />
         ))}
       </div>
