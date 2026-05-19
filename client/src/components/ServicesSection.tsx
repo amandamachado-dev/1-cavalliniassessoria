@@ -40,7 +40,7 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
         />
 
         {/* Image */}
-        <div className="relative overflow-hidden" style={{ height: "220px" }}>
+        <div className="relative overflow-hidden" style={{ height: "clamp(140px, 28vw, 220px)" }}>
           <img
             src={service.image}
             alt={service.title}

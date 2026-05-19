@@ -1,9 +1,8 @@
 /*
  * Home — Página principal Cavallini Assessoria
- * Fluxo: Hero → Stats → Quem Somos → Vídeo
- *        → [Parallax: trabalhador] → Serviços
+ * Fluxo: Hero → Stats → Vídeo → Serviços
  *        → CTA laranja → [Parallax: extintor]
- *        → Parceiros → Contato → Footer
+ *        → Quem Somos → Parceiros → Contato → Footer
  */
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -19,8 +18,7 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { useTheme } from "@/contexts/ThemeContext";
 
-// URLs das imagens parallax (webdev storage)
-const PARALLAX_WORKER = "/manus-storage/trabalhador-costas-com-logo_49fa1b29.webp";
+// URL da imagem parallax (webdev storage)
 const PARALLAX_EXTINTOR = "/manus-storage/extintor_bb1e88f3.webp";
 
 export default function Home() {
@@ -42,26 +40,16 @@ export default function Home() {
         {/* 2. Stats — 4 métricas de impacto com contador animado */}
         <StatsSection />
 
-        {/* 3. Quem Somos */}
-        <AboutSection />
-
-        {/* 4. Vídeo institucional fullwidth */}
+        {/* 3. Vídeo institucional fullwidth — autoplay por scroll */}
         <VideoSection />
 
-        {/* 5. Parallax Divider 1 — Trabalhador com logo (foto real da empresa) */}
-        <ParallaxDivider
-          image={PARALLAX_WORKER}
-          height="460px"
-          overlay={0.55}
-        />
-
-        {/* 6. Serviços — cards clicáveis */}
+        {/* 4. Serviços — cards clicáveis */}
         <ServicesSection />
 
-        {/* 7. CTA intermediário — fundo laranja, conversão */}
+        {/* 5. CTA intermediário — fundo laranja, conversão */}
         <CTASection />
 
-        {/* 8. Parallax Divider 2 — Extintor com logo + frase de impacto */}
+        {/* 6. Parallax Divider — Extintor com logo + frase de impacto */}
         <ParallaxDivider
           image={PARALLAX_EXTINTOR}
           height="400px"
@@ -69,10 +57,13 @@ export default function Home() {
           text="Segurança não se promete. Se entrega."
         />
 
-        {/* 9. Parceiros */}
+        {/* 7. Quem Somos — movido para antes dos parceiros */}
+        <AboutSection />
+
+        {/* 8. Parceiros */}
         <PartnersSection />
 
-        {/* 10. Contato */}
+        {/* 9. Contato */}
         <ContactSection />
       </main>
 

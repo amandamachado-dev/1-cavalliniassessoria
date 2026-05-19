@@ -1,28 +1,46 @@
 /*
- * VideoSection — Vídeo fullwidth, sem header de texto
- * Design: Vídeo ocupa toda a largura. Play button minimalista.
- * Sem gradientes laterais. Borda superior/inferior sutil.
+ * VideoSection — Vídeo fullwidth com autoplay por scroll
+ * Design: Vídeo ocupa toda a largura. Sem capa/poster.
+ * Comportamento: play quando visível, pause quando sair da tela.
+ * Retoma ao retornar ao viewport.
  */
-import { useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ASSETS } from "@/lib/constants";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Play, Pause } from "lucide-react";
 
 export default function VideoSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
-  const toggleVideo = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {
+              // Autoplay bloqueado pelo browser — silencia o erro
+            });
+          } else {
+            video.pause();
+          }
+        });
+      },
+      {
+        // Dispara quando pelo menos 30% do vídeo está visível
+        threshold: 0.3,
+      }
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.unobserve(video);
+    };
+  }, []);
 
   return (
     <section
@@ -35,14 +53,7 @@ export default function VideoSection() {
       }}
     >
       {/* Video container */}
-      <div
-        style={{ position: "relative", width: "100%", aspectRatio: "16/9", cursor: "pointer" }}
-        onClick={toggleVideo}
-        role="button"
-        aria-label={isPlaying ? "Pausar vídeo" : "Reproduzir vídeo"}
-        tabIndex={0}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleVideo(); }}
-      >
+      <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
         <video
           ref={videoRef}
           src={ASSETS.fireExtinguisherVideo}
@@ -50,78 +61,8 @@ export default function VideoSection() {
           playsInline
           muted
           loop
-          preload="none"
-          poster={ASSETS.extintorSemLogo}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
+          preload="auto"
         />
-
-        {/* Overlay escuro sutil quando pausado */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "rgba(0,0,0,0.25)",
-            opacity: isPlaying ? 0 : 1,
-            transition: "opacity 0.3s ease",
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Play/Pause button */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: isPlaying ? 0 : 1,
-            transition: "opacity 0.3s ease",
-          }}
-          className="group"
-        >
-          <div
-            style={{
-              width: "5rem",
-              height: "5rem",
-              backgroundColor: "#D93E15",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "transform 0.2s ease, background-color 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.08)")}
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            {isPlaying
-              ? <Pause style={{ width: "1.5rem", height: "1.5rem", color: "#FFFFFF" }} />
-              : <Play style={{ width: "1.5rem", height: "1.5rem", color: "#FFFFFF", marginLeft: "3px" }} />
-            }
-          </div>
-        </div>
-
-        {/* Hover: mostrar pause quando tocando */}
-        {isPlaying && (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              opacity: 0,
-              transition: "opacity 0.2s ease",
-            }}
-            className="group-hover:opacity-100"
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "0")}
-          >
-            <div style={{ width: "4rem", height: "4rem", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Pause style={{ width: "1.25rem", height: "1.25rem", color: "#FFFFFF" }} />
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
