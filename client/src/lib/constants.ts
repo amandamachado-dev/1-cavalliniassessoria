@@ -56,8 +56,8 @@ export const PARTNER_LOGOS = [
 // ─── Navigation Links ───────────────────────────────────────
 export const NAV_LINKS = [
   { label: "Home", href: "#hero" },
-  { label: "Quem Somos", href: "#quem-somos" },
   { label: "Serviços", href: "#solucoes" },
+  { label: "Portfólio", href: "/portfolio" },
   { label: "FAQ", href: "/faq" },
   { label: "Contato", href: "#contato" },
 ] as const;
@@ -179,3 +179,64 @@ export const FAQ_ITEMS = [
 // ─── Contact / Social ───────────────────────────────────────
 export const WHATSAPP_URL = "https://wa.me/5511999999999";
 export const WHATSAPP_MESSAGE = "Olá! Gostaria de saber mais sobre os serviços da Cavallini Assessoria.";
+
+// ─── Portfolio Data ─────────────────────────────────────────
+export const PORTFOLIO_ITEMS = [
+  {
+    id: "coco-bambu",
+    slug: "coco-bambu",
+    number: "01",
+    client: "Coco Bambu",
+    segment: "Restaurante",
+    location: "São Paulo, SP",
+    service: "AVCB + Projetos de Engenharia",
+    serviceSlug: "avcb",
+    year: "2024",
+    area: "1.200 m²",
+    challenge: "Regularização completa de unidade de grande porte em shopping center, com exigências específicas do Corpo de Bombeiros para estabelecimentos de alimentação com alta circulação de público.",
+    solution: "Elaboração de projeto técnico completo de combate a incêndio, adequação dos sistemas hidráulicos, instalação de sprinklers e alarmes, e acompanhamento integral até a emissão do AVCB.",
+    result: "AVCB emitido dentro do prazo, sem pendências. Unidade operando em total conformidade com as normas de segurança vigentes.",
+    tags: ["AVCB", "Sprinklers", "Alarme de Incêndio", "Projeto Hidráulico"],
+    image: "/manus-storage/assessoria-reuniao_8c0d0665.webp",
+    logoSrc: "/manus-storage/coco-bambu-clean_818d0f37.png",
+    featured: true,
+  },
+  {
+    id: "f1-formula-1",
+    slug: "f1-formula-1",
+    number: "02",
+    client: "Fórmula 1 — GP Brasil",
+    segment: "Evento Esportivo",
+    location: "São Paulo, SP",
+    service: "Consultoria Técnica + Execução",
+    serviceSlug: "execucao-manutencao",
+    year: "2024",
+    area: "Autódromo de Interlagos",
+    challenge: "Garantir a conformidade de segurança contra incêndio para um evento de escala internacional, com estruturas temporárias, camarotes e áreas de alta densidade de público.",
+    solution: "Consultoria técnica especializada para dimensionamento dos sistemas de combate a incêndio nas estruturas temporárias, com inspeção in loco e emissão de laudos técnicos para aprovação dos órgãos competentes.",
+    result: "Evento realizado com aprovação total dos órgãos fiscalizadores. Zero ocorrências relacionadas a incêndio durante o evento.",
+    tags: ["Consultoria", "Estruturas Temporárias", "Laudo Técnico", "Eventos"],
+    image: "/manus-storage/trabalhadores_595cd2db.webp",
+    logoSrc: "/manus-storage/f1-logo_f600a2bc.png",
+    featured: true,
+  },
+  {
+    id: "cop30",
+    slug: "cop30",
+    number: "03",
+    client: "COP30",
+    segment: "Evento Internacional",
+    location: "Belém, PA",
+    service: "Projetos de Engenharia + Execução",
+    serviceSlug: "projetos",
+    year: "2025",
+    area: "Área de Conferências",
+    challenge: "Projeto e execução dos sistemas de combate a incêndio para as instalações da conferência climática mais importante do mundo, com requisitos internacionais de segurança e prazos rígidos.",
+    solution: "Desenvolvimento de projetos técnicos completos, dimensionamento de sistemas hidráulicos e de detecção, coordenação com equipes internacionais e execução dentro dos padrões exigidos pelos organismos internacionais.",
+    result: "Sistemas instalados e aprovados dentro do prazo, atendendo a todos os requisitos nacionais e internacionais de segurança contra incêndio.",
+    tags: ["Projetos", "Execução", "Sistemas Hidráulicos", "Detecção"],
+    image: "/manus-storage/projetos_f4a883ee.webp",
+    logoSrc: "/manus-storage/cop30-logo_3e7fc7df.png",
+    featured: true,
+  },
+] as const;

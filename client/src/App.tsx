@@ -6,6 +6,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import ServicePage from "./pages/ServicePage";
 import FAQPage from "./pages/FAQPage";
+import PortfolioPage from "./pages/PortfolioPage";
+import PortfolioCasePage from "./pages/PortfolioCasePage";
 import NotFound from "./pages/NotFound";
 
 function Router() {
@@ -14,6 +16,8 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/servicos/:id"} component={ServicePage} />
       <Route path={"/faq"} component={FAQPage} />
+      <Route path={"/portfolio"} component={PortfolioPage} />
+      <Route path={"/portfolio/:slug"} component={PortfolioCasePage} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

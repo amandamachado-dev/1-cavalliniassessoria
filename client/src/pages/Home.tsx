@@ -11,6 +11,7 @@ import AboutSection from "@/components/AboutSection";
 import VideoSection from "@/components/VideoSection";
 import ParallaxDivider from "@/components/ParallaxDivider";
 import ServicesSection from "@/components/ServicesSection";
+import PortfolioSection from "@/components/PortfolioSection";
 import CTASection from "@/components/CTASection";
 import PartnersSection from "@/components/PartnersSection";
 import ContactSection from "@/components/ContactSection";
@@ -45,6 +46,9 @@ export default function Home() {
 
         {/* 4. Serviços — cards clicáveis */}
         <ServicesSection />
+
+        {/* 5. Portfólio — cases de sucesso (SEO: prova social + palavras-chave de clientes) */}
+        <PortfolioSection />
 
         {/* 5. CTA intermediário — fundo laranja, conversão */}
         <CTASection />
