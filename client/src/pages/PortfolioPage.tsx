@@ -1,14 +1,14 @@
 /*
  * PortfolioPage — Página de portfólio /portfolio
- * Design: Hero editorial + grid de cases + CTA final
+ * Design: Hero editorial + lista de cases (split image|content no desktop, stack no mobile)
  * SEO: H1 semântico, meta description via useEffect, schema.org ItemList
+ * Responsive: mobile-first, breakpoints sm(640) md(768) lg(1024)
  * Palette: #D93E15 (brand), #0A0A0A (dark), #F5F2EE (light)
- * Type: Space Grotesk (headlines) + JetBrains Mono (labels) + Urbanist (body)
  */
 import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, MapPin, Calendar, Ruler } from "lucide-react";
-import { PORTFOLIO_ITEMS, WHATSAPP_URL, ASSETS } from "@/lib/constants";
+import { PORTFOLIO_ITEMS, WHATSAPP_URL } from "@/lib/constants";
 import { useTheme } from "@/contexts/ThemeContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,7 +21,6 @@ export default function PortfolioPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // SEO: atualizar title e meta description
     document.title = "Portfólio | Cases de Segurança Contra Incêndio — Cavallini Assessoria";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
@@ -49,70 +48,54 @@ export default function PortfolioPage() {
         {/* ── Hero ── */}
         <section
           aria-label="Portfólio de Cases em Segurança Contra Incêndio"
-          style={{
-            position: "relative",
-            paddingTop: "8rem",
-            paddingBottom: "5rem",
-            borderBottom: `1px solid ${border}`,
-            overflow: "hidden",
-          }}
+          className="relative overflow-hidden pt-28 sm:pt-32 pb-14 sm:pb-20"
+          style={{ borderBottom: `1px solid ${border}` }}
         >
-          {/* Background watermark */}
+          {/* Background watermark — só desktop */}
           <span
             aria-hidden="true"
+            className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none leading-none"
             style={{
-              position: "absolute",
-              right: "-2rem",
-              top: "50%",
-              transform: "translateY(-50%)",
               fontFamily: "'Space Grotesk', sans-serif",
               fontWeight: 700,
               fontSize: "clamp(6rem, 18vw, 18rem)",
-              lineHeight: 1,
               color: isDark ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.03)",
-              pointerEvents: "none",
-              userSelect: "none",
               letterSpacing: "-0.04em",
             }}
           >
             CASES
           </span>
 
-          <div style={{ maxWidth: "1320px", margin: "0 auto", padding: "0 1.25rem", position: "relative", zIndex: 1 }}>
+          <div className="mx-auto px-5 sm:px-6 lg:px-8 relative z-10" style={{ maxWidth: "1320px" }}>
             {/* Back link */}
             <a
               href="/"
               onClick={(e) => { e.preventDefault(); setLocation("/"); }}
+              className="inline-flex items-center gap-2 mb-8 sm:mb-10 transition-colors duration-200 no-underline"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "0.65rem",
                 letterSpacing: "0.16em",
                 textTransform: "uppercase",
                 color: textMuted,
-                textDecoration: "none",
-                marginBottom: "2.5rem",
-                transition: "color 0.2s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#D93E15")}
               onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
             >
-              <ArrowLeft style={{ width: "0.875rem", height: "0.875rem" }} />
+              <ArrowLeft className="w-3.5 h-3.5" />
               Voltar ao início
             </a>
 
             {/* Eyebrow */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
-              <span style={{ width: "1.5rem", height: "1px", backgroundColor: "#D93E15", flexShrink: 0 }} />
+            <div className="flex items-center gap-3 mb-5">
+              <span className="block w-6 h-px flex-shrink-0" style={{ backgroundColor: "#D93E15" }} />
               <span
+                className="uppercase"
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: "0.6875rem",
                   fontWeight: 500,
                   letterSpacing: "0.18em",
-                  textTransform: "uppercase",
                   color: "#D93E15",
                 }}
               >
@@ -120,17 +103,17 @@ export default function PortfolioPage() {
               </span>
             </div>
 
-            {/* H1 — principal para SEO */}
+            {/* H1 */}
             <h1
+              className="m-0 mb-5"
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontWeight: 500,
-                fontSize: "clamp(2rem, 5vw, 3.5rem)",
+                fontSize: "clamp(1.75rem, 5vw, 3.5rem)",
                 lineHeight: 1.08,
                 letterSpacing: "-0.025em",
                 color: textPrimary,
                 maxWidth: "42rem",
-                margin: "0 0 1.5rem",
               }}
             >
               Cases de sucesso em{" "}
@@ -138,14 +121,14 @@ export default function PortfolioPage() {
             </h1>
 
             <p
+              className="m-0"
               style={{
                 fontFamily: "'Urbanist', sans-serif",
                 fontWeight: 300,
-                fontSize: "clamp(0.95rem, 1.5vw, 1.1rem)",
+                fontSize: "clamp(0.9rem, 1.5vw, 1.05rem)",
                 lineHeight: 1.75,
                 color: isDark ? "rgba(240,237,234,0.55)" : "rgba(15,15,15,0.55)",
                 maxWidth: "36rem",
-                margin: 0,
               }}
             >
               Projetos entregues com rigor técnico e aprovação total. Da consultoria inicial à emissão do AVCB, acompanhamos cada etapa para garantir conformidade e segurança.
@@ -153,14 +136,8 @@ export default function PortfolioPage() {
 
             {/* Stats rápidos */}
             <div
-              style={{
-                display: "flex",
-                gap: "3rem",
-                marginTop: "3rem",
-                paddingTop: "2rem",
-                borderTop: `1px solid ${border}`,
-                flexWrap: "wrap",
-              }}
+              className="flex flex-wrap gap-8 sm:gap-12 mt-8 sm:mt-10 pt-6 sm:pt-8"
+              style={{ borderTop: `1px solid ${border}` }}
             >
               {[
                 { value: "500+", label: "Projetos entregues" },
@@ -169,13 +146,12 @@ export default function PortfolioPage() {
               ].map((stat) => (
                 <div key={stat.label}>
                   <div
+                    className="leading-none mb-1.5"
                     style={{
                       fontFamily: "'Space Grotesk', sans-serif",
                       fontWeight: 600,
-                      fontSize: "1.75rem",
+                      fontSize: "clamp(1.5rem, 3vw, 1.75rem)",
                       color: "#D93E15",
-                      lineHeight: 1,
-                      marginBottom: "0.375rem",
                     }}
                   >
                     {stat.value}
@@ -197,98 +173,81 @@ export default function PortfolioPage() {
           </div>
         </section>
 
-        {/* ── Grid de cases ── */}
+        {/* ── Lista de cases ── */}
         <section
           aria-label="Lista de cases"
           itemScope
           itemType="https://schema.org/ItemList"
-          style={{
-            backgroundColor: bg,
-            padding: "5rem 0",
-          }}
+          className="py-12 sm:py-16"
+          style={{ backgroundColor: bg }}
         >
-          <div style={{ maxWidth: "1320px", margin: "0 auto", padding: "0 1.25rem" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "1px", backgroundColor: border }}>
+          <div className="mx-auto px-5 sm:px-6 lg:px-8" style={{ maxWidth: "1320px" }}>
+            <div
+              className="flex flex-col"
+              style={{ gap: "1px", backgroundColor: border }}
+            >
               {PORTFOLIO_ITEMS.map((item, i) => (
                 <Link key={item.id} href={`/portfolio/${item.slug}`}>
                   <article
                     itemScope
                     itemType="https://schema.org/CreativeWork"
                     itemProp="itemListElement"
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr",
-                      backgroundColor: surface,
-                      cursor: "pointer",
-                      overflow: "hidden",
-                    }}
-                    className="portfolio-row"
-                    onMouseEnter={(e) => {
-                      const img = e.currentTarget.querySelector(".case-img") as HTMLImageElement | null;
-                      if (img) img.style.filter = "grayscale(0%)";
-                      if (img) img.style.transform = "scale(1.03)";
-                      const accent = e.currentTarget.querySelector(".row-accent") as HTMLElement | null;
-                      if (accent) accent.style.transform = "scaleX(1)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const img = e.currentTarget.querySelector(".case-img") as HTMLImageElement | null;
-                      if (img) img.style.filter = "grayscale(100%)";
-                      if (img) img.style.transform = "scale(1)";
-                      const accent = e.currentTarget.querySelector(".row-accent") as HTMLElement | null;
-                      if (accent) accent.style.transform = "scaleX(0)";
-                    }}
+                    className="cursor-pointer overflow-hidden group"
+                    style={{ backgroundColor: surface }}
                   >
-                    {/* Accent line */}
+                    {/* Accent top line */}
                     <div
-                      className="row-accent"
+                      className="h-0.5 origin-left transition-transform duration-300"
                       style={{
-                        height: "2px",
                         backgroundColor: "#D93E15",
                         transform: "scaleX(0)",
-                        transformOrigin: "left",
-                        transition: "transform 0.3s ease",
+                      }}
+                      ref={(el) => {
+                        if (!el) return;
+                        const p = el.closest("article");
+                        if (!p) return;
+                        p.addEventListener("mouseenter", () => { el.style.transform = "scaleX(1)"; });
+                        p.addEventListener("mouseleave", () => { el.style.transform = "scaleX(0)"; });
                       }}
                     />
 
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "clamp(200px, 28%, 340px) 1fr",
-                        gap: 0,
-                      }}
-                      className="case-grid"
-                    >
+                    {/* Layout: stack no mobile, split no md+ */}
+                    <div className="flex flex-col md:flex-row">
                       {/* Image */}
-                      <div style={{ position: "relative", overflow: "hidden", height: "clamp(180px, 22vw, 280px)" }}>
+                      <div
+                        className="relative overflow-hidden flex-shrink-0 w-full md:w-64 lg:w-80 xl:w-96"
+                        style={{ height: "clamp(200px, 45vw, 280px)" }}
+                      >
                         <img
-                          className="case-img"
+                          className="w-full h-full object-cover block transition-all duration-700"
                           src={item.image}
                           alt={`Case ${item.client} — ${item.service} em ${item.location} | Cavallini Assessoria`}
                           itemProp="image"
                           loading={i === 0 ? "eager" : "lazy"}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            display: "block",
-                            filter: "grayscale(100%)",
-                            transition: "filter 0.6s ease, transform 0.7s ease",
+                          style={{ filter: "grayscale(100%)" }}
+                          ref={(el) => {
+                            if (!el) return;
+                            const p = el.closest("article");
+                            if (!p) return;
+                            p.addEventListener("mouseenter", () => {
+                              el.style.filter = "grayscale(0%)";
+                              el.style.transform = "scale(1.03)";
+                            });
+                            p.addEventListener("mouseleave", () => {
+                              el.style.filter = "grayscale(100%)";
+                              el.style.transform = "scale(1)";
+                            });
                           }}
                         />
                         {/* Number */}
                         <span
                           aria-hidden="true"
+                          className="absolute bottom-3 left-4 pointer-events-none select-none leading-none"
                           style={{
-                            position: "absolute",
-                            bottom: "0.75rem",
-                            left: "1rem",
                             fontFamily: "'Space Grotesk', sans-serif",
                             fontWeight: 700,
-                            fontSize: "5rem",
-                            lineHeight: 1,
+                            fontSize: "4.5rem",
                             color: "rgba(255,255,255,0.07)",
-                            pointerEvents: "none",
-                            userSelect: "none",
                           }}
                         >
                           {item.number}
@@ -297,29 +256,26 @@ export default function PortfolioPage() {
 
                       {/* Content */}
                       <div
-                        style={{
-                          padding: "2rem 2.5rem",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          borderLeft: `1px solid ${border}`,
-                        }}
+                        className="flex flex-col justify-between p-5 sm:p-6 lg:p-8 flex-1"
+                        style={{ borderTop: `1px solid ${border}` }}
                       >
                         <div>
                           {/* Logo + segment */}
-                          <div style={{ display: "flex", alignItems: "center", gap: "0.875rem", marginBottom: "1.25rem" }}>
+                          <div className="flex items-center gap-3 mb-4">
                             <img
                               src={item.logoSrc}
                               alt={`Logo ${item.client}`}
+                              className="h-6 w-auto object-contain flex-shrink-0"
                               style={{
-                                height: "1.75rem",
-                                width: "auto",
-                                objectFit: "contain",
                                 filter: isDark ? "invert(1) brightness(0.65)" : "brightness(0) opacity(0.45)",
                               }}
                             />
-                            <span style={{ width: "1px", height: "1.25rem", backgroundColor: border, flexShrink: 0 }} />
                             <span
+                              className="flex-shrink-0"
+                              style={{ width: "1px", height: "1.25rem", backgroundColor: border }}
+                            />
+                            <span
+                              className="truncate"
                               style={{
                                 fontFamily: "'JetBrains Mono', monospace",
                                 fontSize: "0.6rem",
@@ -334,34 +290,34 @@ export default function PortfolioPage() {
 
                           <h2
                             itemProp="name"
+                            className="m-0 mb-1"
                             style={{
                               fontFamily: "'Space Grotesk', sans-serif",
                               fontWeight: 500,
-                              fontSize: "clamp(1.25rem, 2vw, 1.625rem)",
+                              fontSize: "clamp(1.15rem, 2vw, 1.5rem)",
                               letterSpacing: "-0.015em",
                               lineHeight: 1.2,
                               color: textPrimary,
-                              margin: "0 0 0.5rem",
                             }}
                           >
                             {item.client}
                           </h2>
 
                           <p
+                            className="m-0 mb-3"
                             style={{
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: "0.6rem",
                               letterSpacing: "0.1em",
                               textTransform: "uppercase",
                               color: "#D93E15",
-                              margin: "0 0 1rem",
                             }}
                           >
                             {item.service}
                           </p>
 
                           {/* Meta info */}
-                          <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", marginBottom: "1.25rem" }}>
+                          <div className="flex flex-wrap gap-4 sm:gap-6 mb-4">
                             {[
                               { Icon: MapPin, text: item.location },
                               { Icon: Calendar, text: item.year },
@@ -369,16 +325,14 @@ export default function PortfolioPage() {
                             ].map(({ Icon, text }) => (
                               <span
                                 key={text}
+                                className="inline-flex items-center gap-1.5"
                                 style={{
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: "0.375rem",
                                   fontFamily: "'Urbanist', sans-serif",
                                   fontSize: "0.8rem",
                                   color: textMuted,
                                 }}
                               >
-                                <Icon style={{ width: "0.75rem", height: "0.75rem", color: "#D93E15", flexShrink: 0 }} />
+                                <Icon className="w-3 h-3 flex-shrink-0" style={{ color: "#D93E15" }} />
                                 {text}
                               </span>
                             ))}
@@ -386,13 +340,13 @@ export default function PortfolioPage() {
 
                           <p
                             itemProp="description"
+                            className="m-0 mb-4 hidden sm:block"
                             style={{
                               fontFamily: "'Urbanist', sans-serif",
                               fontWeight: 300,
                               fontSize: "0.875rem",
                               lineHeight: 1.7,
                               color: isDark ? "rgba(240,237,234,0.5)" : "rgba(15,15,15,0.55)",
-                              margin: "0 0 1.25rem",
                               maxWidth: "42rem",
                             }}
                           >
@@ -400,18 +354,18 @@ export default function PortfolioPage() {
                           </p>
 
                           {/* Tags */}
-                          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.375rem" }}>
+                          <div className="flex flex-wrap gap-1.5">
                             {item.tags.map((tag) => (
                               <span
                                 key={tag}
                                 style={{
                                   fontFamily: "'JetBrains Mono', monospace",
-                                  fontSize: "0.575rem",
+                                  fontSize: "0.55rem",
                                   letterSpacing: "0.1em",
                                   textTransform: "uppercase",
                                   color: isDark ? "rgba(217,62,21,0.8)" : "#D93E15",
                                   border: `1px solid ${isDark ? "rgba(217,62,21,0.2)" : "rgba(217,62,21,0.25)"}`,
-                                  padding: "0.2rem 0.5rem",
+                                  padding: "0.2rem 0.45rem",
                                 }}
                               >
                                 {tag}
@@ -421,12 +375,13 @@ export default function PortfolioPage() {
                         </div>
 
                         {/* CTA */}
-                        <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: `1px solid ${border}` }}>
+                        <div
+                          className="mt-4 pt-4 sm:mt-5 sm:pt-5"
+                          style={{ borderTop: `1px solid ${border}` }}
+                        >
                           <span
+                            className="inline-flex items-center gap-2"
                             style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: "0.5rem",
                               fontFamily: "'JetBrains Mono', monospace",
                               fontSize: "0.65rem",
                               fontWeight: 500,
@@ -436,7 +391,7 @@ export default function PortfolioPage() {
                             }}
                           >
                             Ver case completo
-                            <ArrowRight style={{ width: "0.875rem", height: "0.875rem" }} />
+                            <ArrowRight className="w-3.5 h-3.5" />
                           </span>
                         </div>
                       </div>
@@ -451,44 +406,35 @@ export default function PortfolioPage() {
         {/* ── CTA Final ── */}
         <section
           aria-label="Solicite seu diagnóstico"
-          style={{
-            backgroundColor: "#D93E15",
-            padding: "4rem 1.25rem",
-          }}
+          className="px-5 sm:px-6 lg:px-8 py-14 sm:py-16"
+          style={{ backgroundColor: "#D93E15" }}
         >
           <div
-            style={{
-              maxWidth: "1320px",
-              margin: "0 auto",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "2rem",
-            }}
+            className="mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 sm:gap-8"
+            style={{ maxWidth: "1320px" }}
           >
             <div>
               <p
+                className="m-0 mb-2"
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: "0.65rem",
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
                   color: "rgba(255,255,255,0.6)",
-                  marginBottom: "0.5rem",
                 }}
               >
                 Próximo case
               </p>
               <h2
+                className="m-0"
                 style={{
                   fontFamily: "'Space Grotesk', sans-serif",
                   fontWeight: 500,
-                  fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+                  fontSize: "clamp(1.4rem, 3vw, 2.25rem)",
                   lineHeight: 1.12,
                   letterSpacing: "-0.02em",
                   color: "#FFFFFF",
-                  margin: 0,
                 }}
               >
                 Pode ser o seu projeto.
@@ -498,10 +444,8 @@ export default function PortfolioPage() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 no-underline transition-colors duration-200 flex-shrink-0"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.625rem",
                 backgroundColor: "#FFFFFF",
                 color: "#D93E15",
                 fontFamily: "'JetBrains Mono', monospace",
@@ -509,16 +453,13 @@ export default function PortfolioPage() {
                 fontWeight: 600,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                padding: "1rem 2rem",
-                textDecoration: "none",
-                transition: "background-color 0.2s",
-                whiteSpace: "nowrap",
+                padding: "0.875rem 1.75rem",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F5F2EE")}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#FFFFFF")}
             >
               Solicitar diagnóstico gratuito
-              <ArrowRight style={{ width: "0.875rem", height: "0.875rem" }} />
+              <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
         </section>
