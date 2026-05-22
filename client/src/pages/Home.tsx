@@ -1,8 +1,8 @@
 /*
  * Home — Página principal Cavallini Assessoria
- * Fluxo: Hero → Stats → Vídeo → Serviços
+ * Fluxo: Hero → Stats → Serviços → Portfólio
  *        → CTA laranja → [Parallax: extintor]
- *        → Quem Somos → Parceiros → Contato → Footer
+ *        → Quem Somos → Parceiros → Vídeo → Contato → Footer
  */
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -41,10 +41,7 @@ export default function Home() {
         {/* 2. Stats — 4 métricas de impacto com contador animado */}
         <StatsSection />
 
-        {/* 3. Vídeo institucional fullwidth — autoplay por scroll */}
-        <VideoSection />
-
-        {/* 4. Serviços — cards clicáveis */}
+        {/* 3. Serviços — cards clicáveis */}
         <ServicesSection />
 
         {/* 5. Portfólio — cases de sucesso (SEO: prova social + palavras-chave de clientes) */}
@@ -67,7 +64,10 @@ export default function Home() {
         {/* 8. Parceiros */}
         <PartnersSection />
 
-        {/* 9. Contato */}
+        {/* 9. Vídeo institucional fullwidth — autoplay por scroll, acima do contato */}
+        <VideoSection />
+
+        {/* 10. Contato */}
         <ContactSection />
       </main>
 
