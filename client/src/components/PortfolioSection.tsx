@@ -1,11 +1,13 @@
 /*
- * PortfolioSection — Seção compacta de cases na home
- * Design: Grid 1col mobile → 3col desktop. Imagem P&B → cor no hover.
- * SEO: H2 semântico, schema-ready, links internos para /portfolio e /portfolio/:slug
+ * PortfolioSection — Showcase editorial na home (sem cards)
+ * Design: Imagem grande em destaque à esquerda + lista de cases à direita
+ *         Hover na lista troca a imagem em destaque com fade suave
+ * SEO: H2 semântico, schema.org ItemList, links internos
  * Palette: #D93E15 (brand), #0A0A0A (dark), #F5F2EE (light)
- * Type: Space Grotesk (headlines) + JetBrains Mono (labels) + Urbanist (body)
- * Responsive: mobile-first, breakpoints sm(640) md(768) lg(1024)
+ * Type: Space Grotesk + JetBrains Mono + Urbanist
+ * Responsive: imagem oculta no mobile, lista full-width
  */
+import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { PORTFOLIO_ITEMS } from "@/lib/constants";
@@ -14,11 +16,13 @@ import { useTheme } from "@/contexts/ThemeContext";
 export default function PortfolioSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const cardBg = isDark ? "#0A0A0A" : "#FFFFFF";
+  const bg = isDark ? "#0D0D0D" : "#FAFAF9";
   const textPrimary = isDark ? "#F0EDEA" : "#0F0F0F";
-  const textMuted = isDark ? "rgba(240,237,234,0.35)" : "rgba(15,15,15,0.4)";
-  const dividerColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
+  const textMuted = isDark ? "rgba(240,237,234,0.38)" : "rgba(15,15,15,0.38)";
+  const border = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+  const activeItem = PORTFOLIO_ITEMS[activeIndex];
 
   return (
     <section
@@ -26,26 +30,26 @@ export default function PortfolioSection() {
       aria-label="Portfólio de Projetos — Cases de Sucesso em Segurança Contra Incêndio"
       itemScope
       itemType="https://schema.org/ItemList"
-      className="py-16 sm:py-20"
+      className="py-16 sm:py-20 lg:py-24"
       style={{
-        backgroundColor: isDark ? "#0D0D0D" : "#FAFAF9",
-        borderTop: `1px solid ${dividerColor}`,
+        backgroundColor: bg,
+        borderTop: `1px solid ${border}`,
       }}
     >
       <div className="mx-auto px-5 sm:px-6 lg:px-8" style={{ maxWidth: "1320px" }}>
 
         {/* ── Header ── */}
-        <div className="flex flex-wrap items-end justify-between gap-6 mb-10 sm:mb-12">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-10 sm:mb-14">
           <div>
             <div className="flex items-center gap-3 mb-4">
               <span className="block w-6 h-px flex-shrink-0" style={{ backgroundColor: "#D93E15" }} />
               <span
-                className="uppercase tracking-widest"
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: "0.6875rem",
                   fontWeight: 500,
                   letterSpacing: "0.18em",
+                  textTransform: "uppercase",
                   color: "#D93E15",
                 }}
               >
@@ -58,235 +62,313 @@ export default function PortfolioSection() {
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontWeight: 500,
-                fontSize: "clamp(1.4rem, 3.5vw, 2.25rem)",
-                lineHeight: 1.12,
-                letterSpacing: "-0.02em",
+                fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)",
+                lineHeight: 1.1,
+                letterSpacing: "-0.025em",
                 color: textPrimary,
-                maxWidth: "32rem",
+                maxWidth: "28rem",
               }}
             >
-              Projetos realizados em{" "}
-              <span style={{ color: "#D93E15" }}>empresas líderes</span>.
+              Projetos que falam{" "}
+              <span style={{ color: "#D93E15" }}>por si só</span>.
             </h2>
           </div>
 
-          {/* CTA → página completa */}
+          {/* CTA desktop */}
           <Link href="/portfolio">
             <span
-              className="inline-flex items-center gap-2 cursor-pointer whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-2 cursor-pointer transition-colors duration-200"
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "0.65rem",
                 fontWeight: 500,
                 letterSpacing: "0.16em",
                 textTransform: "uppercase",
-                color: "#D93E15",
+                color: textMuted,
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#D93E15")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
             >
-              Ver todos os cases
+              Ver portfólio completo
               <ArrowRight className="w-3.5 h-3.5" />
             </span>
           </Link>
         </div>
 
-        {/* ── Grid de cases — 1 col mobile, 2 col sm, 3 col lg ── */}
-        <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          style={{
-            gap: "1px",
-            backgroundColor: dividerColor,
-          }}
-        >
-          {PORTFOLIO_ITEMS.map((item, i) => (
-            <Link key={item.id} href={`/portfolio/${item.slug}`}>
-              <article
-                itemScope
-                itemType="https://schema.org/CreativeWork"
-                itemProp="itemListElement"
-                className="relative overflow-hidden cursor-pointer group"
-                style={{ backgroundColor: cardBg }}
+        {/* ── Showcase: imagem + lista ── */}
+        <div className="flex flex-col lg:flex-row gap-0" style={{ minHeight: "420px" }}>
+
+          {/* ── Imagem em destaque (só desktop/tablet lg+) ── */}
+          <div
+            className="hidden lg:block relative overflow-hidden flex-shrink-0"
+            style={{ width: "48%", minHeight: "460px" }}
+          >
+            {/* Imagem com fade ao trocar */}
+            {PORTFOLIO_ITEMS.map((item, i) => (
+              <div
+                key={item.id}
+                className="absolute inset-0 transition-opacity duration-700"
+                style={{ opacity: i === activeIndex ? 1 : 0 }}
               >
-                {/* Accent line top */}
-                <div
-                  className="absolute top-0 left-0 right-0 z-10 origin-left transition-transform duration-300"
+                <img
+                  src={item.image}
+                  alt={`Case ${item.client} — ${item.service} | Cavallini Assessoria`}
+                  className="w-full h-full object-cover block"
+                  loading={i === 0 ? "eager" : "lazy"}
                   style={{
-                    height: "2px",
-                    backgroundColor: "#D93E15",
-                    transform: "scaleX(0)",
-                  }}
-                  ref={(el) => {
-                    if (!el) return;
-                    const parent = el.closest("article");
-                    if (!parent) return;
-                    parent.addEventListener("mouseenter", () => { el.style.transform = "scaleX(1)"; });
-                    parent.addEventListener("mouseleave", () => { el.style.transform = "scaleX(0)"; });
+                    filter: "grayscale(20%) brightness(0.85)",
+                    transform: i === activeIndex ? "scale(1.02)" : "scale(1)",
+                    transition: "transform 1.2s ease",
                   }}
                 />
-
-                {/* Image — altura menor no mobile */}
+                {/* Gradient overlay */}
                 <div
-                  className="relative overflow-hidden"
-                  style={{ height: "clamp(160px, 40vw, 200px)" }}
-                >
-                  <img
-                    src={item.image}
-                    alt={`Case ${item.client} — ${item.service} | Cavallini Assessoria`}
-                    itemProp="image"
-                    loading={i === 0 ? "eager" : "lazy"}
-                    className="w-full h-full object-cover block transition-all duration-700"
-                    style={{ filter: "grayscale(100%)" }}
-                    ref={(el) => {
-                      if (!el) return;
-                      const parent = el.closest("article");
-                      if (!parent) return;
-                      parent.addEventListener("mouseenter", () => {
-                        el.style.filter = "grayscale(0%)";
-                        el.style.transform = "scale(1.04)";
-                      });
-                      parent.addEventListener("mouseleave", () => {
-                        el.style.filter = "grayscale(100%)";
-                        el.style.transform = "scale(1)";
-                      });
-                    }}
-                  />
-                  {/* Number watermark */}
-                  <span
-                    aria-hidden="true"
-                    className="absolute bottom-2 right-3 pointer-events-none select-none leading-none"
-                    style={{
-                      fontFamily: "'Space Grotesk', sans-serif",
-                      fontWeight: 700,
-                      fontSize: "4rem",
-                      color: "rgba(255,255,255,0.06)",
-                    }}
-                  >
-                    {item.number}
-                  </span>
-                </div>
+                  className="absolute inset-0"
+                  style={{
+                    background: isDark
+                      ? "linear-gradient(to right, rgba(0,0,0,0) 60%, #0D0D0D 100%), linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%)"
+                      : "linear-gradient(to right, rgba(0,0,0,0) 60%, #FAFAF9 100%), linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%)",
+                  }}
+                />
+              </div>
+            ))}
 
-                {/* Content */}
-                <div className="p-5 sm:p-6">
-                  {/* Client logo + segment */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src={item.logoSrc}
-                      alt={`Logo ${item.client}`}
-                      className="h-5 w-auto object-contain flex-shrink-0"
+            {/* Número do case sobreposto */}
+            <span
+              aria-hidden="true"
+              className="absolute bottom-6 left-6 z-10 pointer-events-none select-none leading-none"
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(5rem, 10vw, 9rem)",
+                color: "rgba(255,255,255,0.06)",
+                transition: "opacity 0.4s ease",
+              }}
+            >
+              {activeItem.number}
+            </span>
+
+            {/* Logo do cliente sobreposta */}
+            <div className="absolute bottom-6 right-6 z-10">
+              <img
+                src={activeItem.logoSrc}
+                alt={`Logo ${activeItem.client}`}
+                className="h-8 w-auto object-contain transition-opacity duration-500"
+                style={{ filter: "invert(1) brightness(0.8)", opacity: 0.55 }}
+              />
+            </div>
+          </div>
+
+          {/* ── Lista de cases ── */}
+          <div
+            className="flex-1 flex flex-col"
+            style={{ borderLeft: `1px solid ${border}` }}
+          >
+            {PORTFOLIO_ITEMS.map((item, i) => {
+              const isActive = i === activeIndex;
+              return (
+                <Link key={item.id} href={`/portfolio/${item.slug}`}>
+                  <article
+                    itemScope
+                    itemType="https://schema.org/CreativeWork"
+                    itemProp="itemListElement"
+                    className="relative cursor-pointer group transition-colors duration-300"
+                    style={{
+                      borderBottom: `1px solid ${border}`,
+                      backgroundColor: isActive
+                        ? isDark ? "rgba(217,62,21,0.05)" : "rgba(217,62,21,0.03)"
+                        : "transparent",
+                      padding: "1.75rem 2rem",
+                    }}
+                    onMouseEnter={() => setActiveIndex(i)}
+                  >
+                    {/* Accent left bar */}
+                    <div
+                      className="absolute left-0 top-0 bottom-0 transition-all duration-300"
                       style={{
-                        filter: isDark ? "invert(1) brightness(0.7)" : "brightness(0) opacity(0.5)",
+                        width: "2px",
+                        backgroundColor: "#D93E15",
+                        transform: isActive ? "scaleY(1)" : "scaleY(0)",
+                        transformOrigin: "top",
                       }}
                     />
-                    <span
-                      className="flex-shrink-0"
-                      style={{
-                        width: "1px",
-                        height: "1rem",
-                        backgroundColor: isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)",
-                      }}
-                    />
-                    <span
-                      className="truncate"
-                      style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: "0.6rem",
-                        letterSpacing: "0.14em",
-                        textTransform: "uppercase",
-                        color: textMuted,
-                      }}
-                    >
-                      {item.segment}
-                    </span>
-                  </div>
 
-                  <h3
-                    itemProp="name"
-                    className="m-0 mb-1"
-                    style={{
-                      fontFamily: "'Space Grotesk', sans-serif",
-                      fontWeight: 500,
-                      fontSize: "1.05rem",
-                      letterSpacing: "-0.01em",
-                      lineHeight: 1.25,
-                      color: textPrimary,
-                    }}
-                  >
-                    {item.client}
-                  </h3>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        {/* Number + segment */}
+                        <div className="flex items-center gap-3 mb-2">
+                          <span
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: "0.6rem",
+                              letterSpacing: "0.18em",
+                              textTransform: "uppercase",
+                              color: isActive ? "#D93E15" : textMuted,
+                              transition: "color 0.3s ease",
+                            }}
+                          >
+                            {item.number}
+                          </span>
+                          <span
+                            className="block flex-shrink-0"
+                            style={{ width: "1px", height: "0.75rem", backgroundColor: border }}
+                          />
+                          <span
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: "0.6rem",
+                              letterSpacing: "0.14em",
+                              textTransform: "uppercase",
+                              color: textMuted,
+                            }}
+                          >
+                            {item.segment}
+                          </span>
+                        </div>
 
-                  <p
-                    className="m-0 mb-3"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: "0.6rem",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      color: isDark ? "rgba(240,237,234,0.3)" : "rgba(15,15,15,0.35)",
-                    }}
-                  >
-                    {item.service} · {item.year}
-                  </p>
+                        {/* Client name */}
+                        <h3
+                          itemProp="name"
+                          className="m-0 mb-1.5 transition-colors duration-300"
+                          style={{
+                            fontFamily: "'Space Grotesk', sans-serif",
+                            fontWeight: 500,
+                            fontSize: "clamp(1.1rem, 2vw, 1.35rem)",
+                            letterSpacing: "-0.015em",
+                            lineHeight: 1.2,
+                            color: isActive ? textPrimary : isDark ? "rgba(240,237,234,0.7)" : "rgba(15,15,15,0.65)",
+                          }}
+                        >
+                          {item.client}
+                        </h3>
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {item.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
+                        {/* Service */}
+                        <p
+                          className="m-0 mb-3"
+                          style={{
+                            fontFamily: "'JetBrains Mono', monospace",
+                            fontSize: "0.6rem",
+                            letterSpacing: "0.1em",
+                            textTransform: "uppercase",
+                            color: isActive ? "#D93E15" : textMuted,
+                            transition: "color 0.3s ease",
+                          }}
+                        >
+                          {item.service}
+                        </p>
+
+                        {/* Tags — só quando ativo */}
+                        <div
+                          className="flex flex-wrap gap-1.5 overflow-hidden transition-all duration-500"
+                          style={{
+                            maxHeight: isActive ? "3rem" : "0",
+                            opacity: isActive ? 1 : 0,
+                          }}
+                        >
+                          {item.tags.slice(0, 3).map((tag) => (
+                            <span
+                              key={tag}
+                              style={{
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: "0.55rem",
+                                letterSpacing: "0.1em",
+                                textTransform: "uppercase",
+                                color: isDark ? "rgba(217,62,21,0.8)" : "#D93E15",
+                                border: `1px solid ${isDark ? "rgba(217,62,21,0.2)" : "rgba(217,62,21,0.25)"}`,
+                                padding: "0.2rem 0.45rem",
+                              }}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Arrow */}
+                      <div
+                        className="flex-shrink-0 mt-1 transition-all duration-300"
                         style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: "0.55rem",
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                          color: isDark ? "rgba(217,62,21,0.8)" : "#D93E15",
-                          border: `1px solid ${isDark ? "rgba(217,62,21,0.2)" : "rgba(217,62,21,0.25)"}`,
-                          padding: "0.2rem 0.45rem",
+                          opacity: isActive ? 1 : 0,
+                          transform: isActive ? "translateX(0)" : "translateX(-6px)",
                         }}
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                        <ArrowRight
+                          className="w-4 h-4"
+                          style={{ color: "#D93E15" }}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              );
+            })}
 
-                  {/* CTA */}
-                  <span
-                    className="inline-flex items-center gap-1.5"
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: "0.6rem",
-                      fontWeight: 500,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      color: "#D93E15",
-                    }}
-                  >
-                    Ver case completo
-                    <ArrowRight className="w-3 h-3" />
-                  </span>
-                </div>
-              </article>
-            </Link>
-          ))}
+            {/* ── CTA final ── */}
+            <div
+              className="mt-auto p-6 sm:p-8 flex items-center justify-between gap-4"
+              style={{ borderTop: `1px solid ${border}` }}
+            >
+              <p
+                className="m-0"
+                style={{
+                  fontFamily: "'Urbanist', sans-serif",
+                  fontWeight: 300,
+                  fontSize: "0.875rem",
+                  lineHeight: 1.6,
+                  color: textMuted,
+                  maxWidth: "22rem",
+                }}
+              >
+                Mais de 500 projetos entregues com aprovação total.
+              </p>
+              <Link href="/portfolio">
+                <span
+                  className="inline-flex items-center gap-2.5 cursor-pointer flex-shrink-0 transition-colors duration-200"
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: "0.65rem",
+                    fontWeight: 600,
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                    color: "#FFFFFF",
+                    backgroundColor: "#D93E15",
+                    padding: "0.75rem 1.5rem",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#B83310")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#D93E15")}
+                >
+                  Ver portfólio
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </span>
+              </Link>
+            </div>
+          </div>
         </div>
 
-        {/* CTA mobile — ver todos */}
-        <div className="mt-8 flex justify-center sm:hidden">
+        {/* ── CTA mobile (abaixo da lista) ── */}
+        <div className="mt-6 flex justify-center lg:hidden">
           <Link href="/portfolio">
             <span
-              className="inline-flex items-center gap-2 border px-5 py-3 cursor-pointer"
+              className="inline-flex items-center gap-2.5 cursor-pointer transition-colors duration-200"
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "0.65rem",
-                fontWeight: 500,
-                letterSpacing: "0.16em",
+                fontWeight: 600,
+                letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                color: "#D93E15",
-                borderColor: "rgba(217,62,21,0.3)",
+                color: "#FFFFFF",
+                backgroundColor: "#D93E15",
+                padding: "0.875rem 2rem",
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#B83310")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#D93E15")}
             >
-              Ver todos os cases
+              Ver portfólio completo
               <ArrowRight className="w-3.5 h-3.5" />
             </span>
           </Link>
         </div>
+
       </div>
     </section>
   );
