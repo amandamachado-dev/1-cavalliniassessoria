@@ -7,10 +7,13 @@
 import { PARTNER_LOGOS } from "@/lib/constants";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useRef } from "react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export default function PartnersSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
 
   // Contraste deliberado com o fundo da página
   const bg = isDark ? "#000000" : "#FFFFFF";
@@ -31,6 +34,7 @@ export default function PartnersSection() {
       <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
         {/* Header */}
         <div
+          ref={headerRef}
           style={{
             display: "flex",
             alignItems: "flex-end",
@@ -41,7 +45,7 @@ export default function PartnersSection() {
           }}
         >
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
+            <div className={`reveal-left ${headerVisible ? "visible" : ""}`} style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
               <span style={{ width: "1.5rem", height: "1px", backgroundColor: "#D93E15", flexShrink: 0 }} />
               <span
                 style={{
@@ -57,6 +61,7 @@ export default function PartnersSection() {
               </span>
             </div>
             <h2
+              className={`reveal reveal-delay-2 ${headerVisible ? "visible" : ""}`}
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontWeight: 500,
@@ -87,6 +92,7 @@ export default function PartnersSection() {
 
         {/* Logos Grid */}
         <div
+          ref={gridRef}
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
@@ -95,14 +101,18 @@ export default function PartnersSection() {
           }}
         >
           {PARTNER_LOGOS.map((logo, i) => (
-            <LogoCell
+            <div
               key={logo.name}
-              name={logo.name}
-              src={logo.src}
-              isDark={isDark}
-              borderColor={borderColor}
-              bg={bg}
-            />
+              className={`reveal ${["reveal-delay-1","reveal-delay-2","reveal-delay-3","reveal-delay-4","reveal-delay-5","reveal-delay-6","reveal-delay-7","reveal-delay-8"][i % 8]} ${gridVisible ? "visible" : ""}`}
+            >
+              <LogoCell
+                name={logo.name}
+                src={logo.src}
+                isDark={isDark}
+                borderColor={borderColor}
+                bg={bg}
+              />
+            </div>
           ))}
         </div>
       </div>

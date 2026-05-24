@@ -4,12 +4,15 @@
  * Texto à esquerda, botão branco à direita.
  */
 import { ArrowRight } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const WHATSAPP = "https://wa.me/5511954004989?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20diagn%C3%B3stico%20gratuito%20para%20meu%20estabelecimento.";
 
 export default function CTASection() {
+  const { ref, isVisible } = useScrollReveal<HTMLElement>();
   return (
     <section
+      ref={ref}
       aria-label="Solicite seu diagnóstico gratuito"
       style={{
         backgroundColor: "#D93E15",
@@ -28,7 +31,7 @@ export default function CTASection() {
         }}
       >
         {/* Text */}
-        <div style={{ flex: "1 1 380px" }}>
+        <div className={`reveal-left ${isVisible ? "visible" : ""}`} style={{ flex: "1 1 380px" }}>
           <p
             style={{
               fontFamily: "'JetBrains Mono', monospace",
@@ -70,7 +73,7 @@ export default function CTASection() {
         </div>
 
         {/* CTA Button */}
-        <div style={{ flexShrink: 0 }}>
+        <div className={`reveal-right reveal-delay-3 ${isVisible ? "visible" : ""}`} style={{ flexShrink: 0 }}>
           <a
             href={WHATSAPP}
             target="_blank"

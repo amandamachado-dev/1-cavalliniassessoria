@@ -7,6 +7,7 @@ import { SERVICES } from "@/lib/constants";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
   const { theme } = useTheme();
@@ -155,6 +156,8 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
 export default function ServicesSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>();
+  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
 
   return (
     <section
@@ -169,8 +172,8 @@ export default function ServicesSection() {
       <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-12">
 
         {/* Header */}
-        <div className="mb-14">
-          <div className="flex items-center gap-3 mb-5">
+        <div ref={headerRef} className="mb-14">
+          <div className={`flex items-center gap-3 mb-5 reveal-left ${headerVisible ? "visible" : ""}`}>
             <span className="w-6 h-[1px] bg-[#D93E15] flex-shrink-0" />
             <span
               style={{
@@ -186,6 +189,7 @@ export default function ServicesSection() {
             </span>
           </div>
           <h2
+            className={`reveal reveal-delay-2 ${headerVisible ? "visible" : ""}`}
             style={{
               fontFamily: "'Space Grotesk', sans-serif",
               fontWeight: 500,
@@ -203,9 +207,14 @@ export default function ServicesSection() {
         </div>
 
         {/* Grid */}
-        <div className="grid md:grid-cols-2 gap-5 lg:gap-6">
+        <div ref={gridRef} className="grid md:grid-cols-2 gap-5 lg:gap-6">
           {SERVICES.map((service, i) => (
-            <ServiceCard key={service.id} service={service} index={i} />
+            <div
+              key={service.id}
+              className={`reveal ${["reveal-delay-1","reveal-delay-2","reveal-delay-3","reveal-delay-4"][i]} ${gridVisible ? "visible" : ""}`}
+            >
+              <ServiceCard service={service} index={i} />
+            </div>
           ))}
         </div>
       </div>

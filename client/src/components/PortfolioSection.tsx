@@ -12,11 +12,14 @@ import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { PORTFOLIO_ITEMS } from "@/lib/constants";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 export default function PortfolioSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [activeIndex, setActiveIndex] = useState(0);
+  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>();
+  const { ref: showcaseRef, isVisible: showcaseVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
 
   const bg = isDark ? "#0D0D0D" : "#FAFAF9";
   const textPrimary = isDark ? "#F0EDEA" : "#0F0F0F";
@@ -39,9 +42,9 @@ export default function PortfolioSection() {
       <div className="mx-auto px-5 sm:px-6 lg:px-8" style={{ maxWidth: "1320px" }}>
 
         {/* ── Header ── */}
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-10 sm:mb-14">
+        <div ref={headerRef} className="flex flex-wrap items-end justify-between gap-4 mb-10 sm:mb-14">
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <div className={`flex items-center gap-3 mb-4 reveal-left ${headerVisible ? "visible" : ""}`}>
               <span className="block w-6 h-px flex-shrink-0" style={{ backgroundColor: "#D93E15" }} />
               <span
                 style={{
@@ -58,7 +61,7 @@ export default function PortfolioSection() {
             </div>
             <h2
               itemProp="name"
-              className="m-0"
+              className={`m-0 reveal reveal-delay-2 ${headerVisible ? "visible" : ""}`}
               style={{
                 fontFamily: "'Space Grotesk', sans-serif",
                 fontWeight: 500,
@@ -77,7 +80,7 @@ export default function PortfolioSection() {
           {/* CTA desktop */}
           <Link href="/portfolio">
             <span
-              className="hidden sm:inline-flex items-center gap-2 cursor-pointer transition-colors duration-200"
+              className={`hidden sm:inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 reveal-right reveal-delay-3 ${headerVisible ? "visible" : ""}`}
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "0.65rem",
@@ -96,11 +99,11 @@ export default function PortfolioSection() {
         </div>
 
         {/* ── Showcase: imagem + lista ── */}
-        <div className="flex flex-col lg:flex-row gap-0" style={{ minHeight: "420px" }}>
+        <div ref={showcaseRef} className="flex flex-col lg:flex-row gap-0" style={{ minHeight: "420px" }}>
 
           {/* ── Imagem em destaque (só desktop/tablet lg+) ── */}
           <div
-            className="hidden lg:block relative overflow-hidden flex-shrink-0"
+            className={`hidden lg:block relative overflow-hidden flex-shrink-0 reveal-left ${showcaseVisible ? "visible" : ""}`}
             style={{ width: "48%", minHeight: "460px" }}
           >
             {/* Imagem com fade ao trocar */}

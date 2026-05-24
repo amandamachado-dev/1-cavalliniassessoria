@@ -32,8 +32,8 @@ function useCountUp(target: number, duration: number, active: boolean) {
   return count;
 }
 
-function StatItem({ value, suffix, label, active, isLast }: {
-  value: number; suffix: string; label: string; active: boolean; isLast: boolean;
+function StatItem({ value, suffix, label, active, isLast, delayClass }: {
+  value: number; suffix: string; label: string; active: boolean; isLast: boolean; delayClass: string;
 }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -41,7 +41,7 @@ function StatItem({ value, suffix, label, active, isLast }: {
 
   return (
     <div
-      className="flex-1 flex flex-col items-center justify-center py-10 px-6 text-center min-w-[140px]"
+      className={`flex-1 flex flex-col items-center justify-center py-10 px-6 text-center min-w-[140px] reveal ${delayClass} ${active ? "visible" : ""}`}
       style={{
         borderRight: isLast
           ? "none"
@@ -124,6 +124,7 @@ export default function StatsSection() {
             label={s.label}
             active={active}
             isLast={i === STATS.length - 1}
+            delayClass={["reveal-delay-1","reveal-delay-2","reveal-delay-3","reveal-delay-4"][i]}
           />
         ))}
       </div>
