@@ -59,7 +59,7 @@ function AccordionItem({
 }
 
 export default function FAQSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>();
+  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
   const { theme } = useTheme();
   const isDark = theme === "dark";
@@ -97,11 +97,7 @@ export default function FAQSection() {
 
       <div className="relative z-10 max-w-[800px] mx-auto px-4 sm:px-6 md:px-12">
         {/* Section Header */}
-        <div
-          className={`mb-16 text-center transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
+        <div className={`mb-16 text-center reveal ${isVisible ? "visible" : ""}`}>
           <div className="inline-flex items-center gap-3 mb-6">
             <span className="w-8 h-[1px] bg-[#d93e15]" />
             <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#d93e15] font-bold">
@@ -128,10 +124,7 @@ export default function FAQSection() {
         {FAQ_ITEMS.map((category, catIndex) => (
           <div
             key={category.category}
-            className={`mb-12 last:mb-0 transition-all duration-1000 ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
-            style={{ transitionDelay: `${catIndex * 200}ms` }}
+            className={`mb-12 last:mb-0 reveal ${["reveal-delay-1","reveal-delay-2","reveal-delay-3","reveal-delay-4"][catIndex] ?? "reveal-delay-4"} ${isVisible ? "visible" : ""}`}
           >
             <h3 className={`text-xs font-mono uppercase tracking-widest mb-4 flex items-center gap-3 ${
               isDark ? "text-stone-500" : "text-stone-400"

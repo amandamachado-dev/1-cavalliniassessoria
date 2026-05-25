@@ -8,14 +8,14 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function AboutSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>();
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   return (
     <section
       id="quem-somos"
-      ref={ref}
+      ref={sectionRef}
       className="relative py-24 md:py-32"
       style={{
         backgroundColor: isDark ? "#0A0A0A" : "#F5F2EE",
@@ -27,14 +27,7 @@ export default function AboutSection() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
           {/* Left — Text */}
-          <div
-            className="space-y-8"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? "translateY(0)" : "translateY(24px)",
-              transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)",
-            }}
-          >
+          <div className={`space-y-8 reveal-left ${isVisible ? "visible" : ""}`}>
             {/* Eyebrow */}
             <div className="flex items-center gap-3">
               <span className="w-6 h-[1px] bg-[#D93E15] flex-shrink-0" />
@@ -140,14 +133,7 @@ export default function AboutSection() {
           </div>
 
           {/* Right — Image */}
-          <div
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? "translateY(0)" : "translateY(24px)",
-              transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)",
-              transitionDelay: "0.2s",
-            }}
-          >
+          <div className={`reveal-right reveal-delay-2 ${isVisible ? "visible" : ""}`}>
             <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
               <img
                 src={ASSETS.tresImgPeb}

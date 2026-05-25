@@ -18,8 +18,8 @@ export default function PortfolioSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const [activeIndex, setActiveIndex] = useState(0);
-  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>();
-  const { ref: showcaseRef, isVisible: showcaseVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
+  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
+  const { ref: showcaseRef, isVisible: showcaseVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
 
   const bg = isDark ? "#0D0D0D" : "#FAFAF9";
   const textPrimary = isDark ? "#F0EDEA" : "#0F0F0F";

@@ -12,8 +12,8 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 export default function PartnersSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>();
-  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
+  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
+  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
 
   // Contraste deliberado com o fundo da página
   const bg = isDark ? "#000000" : "#FFFFFF";

@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { ArrowRight, Phone, MapPin, Clock } from "lucide-react";
 
 export default function ContactSection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>();
+  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -69,14 +69,7 @@ export default function ContactSection() {
       <div className="max-w-[1320px] mx-auto px-5 sm:px-8 lg:px-12">
 
         {/* Header */}
-        <div
-          className="mb-14"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
-          }}
-        >
+        <div className={`mb-14 reveal ${isVisible ? "visible" : ""}`}>
           <div className="flex items-center gap-3 mb-5">
             <span className="w-6 h-[1px] bg-[#D93E15] flex-shrink-0" />
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.6875rem", fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#D93E15" }}>
@@ -92,15 +85,7 @@ export default function ContactSection() {
         <div className="grid lg:grid-cols-5 gap-14 lg:gap-20">
 
           {/* Form */}
-          <div
-            className="lg:col-span-3"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
-              transitionDelay: "0.1s",
-            }}
-          >
+          <div className={`lg:col-span-3 reveal reveal-delay-2 ${isVisible ? "visible" : ""}`}>
             <form onSubmit={handleSubmit} className="space-y-7">
               <div className="grid sm:grid-cols-2 gap-7">
                 <div>
@@ -180,15 +165,7 @@ export default function ContactSection() {
           </div>
 
           {/* Info */}
-          <div
-            className="lg:col-span-2 space-y-8"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
-              transitionDelay: "0.2s",
-            }}
-          >
+          <div className={`lg:col-span-2 space-y-8 reveal reveal-delay-3 ${isVisible ? "visible" : ""}`}>
             {/* WhatsApp */}
             <a
               href={WHATSAPP_URL}

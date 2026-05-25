@@ -156,8 +156,8 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
 export default function ServicesSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>();
-  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
+  const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
+  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section

@@ -9,7 +9,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 const WHATSAPP = "https://wa.me/5511954004989?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20diagn%C3%B3stico%20gratuito%20para%20meu%20estabelecimento.";
 
 export default function CTASection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>();
+  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   return (
     <section
       ref={ref}
