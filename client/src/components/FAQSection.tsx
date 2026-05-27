@@ -82,9 +82,11 @@ export default function FAQSection() {
         <img
           src={ASSETS.trabalhadores}
           alt=""
-          className={`w-full h-full object-cover grayscale ${isDark ? "opacity-10" : "opacity-5"}`}
+          className={`w-full h-full object-cover grayscale`}
+          style={{ opacity: 0, transition: "opacity 0.8s ease" }}
           loading="lazy"
           aria-hidden="true"
+          onLoad={(e) => { e.currentTarget.style.opacity = isDark ? "0.1" : "0.05"; }}
         />
         <div className={`absolute inset-0 ${isDark ? "bg-black/80" : "bg-[var(--surface-primary)]/90"}`} />
         <div className={`absolute top-0 inset-x-0 h-48 ${

@@ -139,8 +139,9 @@ export default function AboutSection() {
                 src={ASSETS.tresImgPeb}
                 alt="Equipe Cavallini em campo realizando vistoria técnica"
                 className="w-full h-full object-cover"
-                style={{ filter: "grayscale(100%)", transition: "filter 0.6s ease" }}
-                loading="lazy"
+                style={{ filter: "grayscale(100%)", transition: "opacity 0.6s ease, filter 0.6s ease", opacity: 0 }}
+                loading="eager"
+                onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
                 onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0%)")}
                 onMouseLeave={(e) => (e.currentTarget.style.filter = "grayscale(100%)")}
               />

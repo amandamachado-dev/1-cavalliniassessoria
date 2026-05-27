@@ -117,12 +117,14 @@ export default function PortfolioSection() {
                   src={item.image}
                   alt={`Case ${item.client} — ${item.service} | Cavallini Assessoria`}
                   className="w-full h-full object-cover block"
-                  loading={i === 0 ? "eager" : "lazy"}
+                  loading="eager"
                   style={{
                     filter: "grayscale(20%) brightness(0.85)",
                     transform: i === activeIndex ? "scale(1.02)" : "scale(1)",
-                    transition: "transform 1.2s ease",
+                    transition: "opacity 0.5s ease, transform 1.2s ease",
+                    opacity: 0,
                   }}
+                  onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
                 />
                 {/* Gradient overlay */}
                 <div

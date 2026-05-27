@@ -194,11 +194,12 @@ function LogoCell({
           height: "2.5rem",
           objectFit: "contain",
           filter: defaultFilter,
-          opacity: defaultOpacity,
-          transition: "filter 0.3s ease, opacity 0.3s ease",
+          opacity: 0,
+          transition: "filter 0.3s ease, opacity 0.5s ease",
           maxWidth: "120px",
           display: "block",
         }}
+        onLoad={(e) => { e.currentTarget.style.opacity = defaultOpacity; }}
       />
     </div>
   );
