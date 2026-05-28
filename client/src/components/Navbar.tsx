@@ -47,7 +47,9 @@ export default function Navbar() {
     }
   };
 
-  const logoSrc = (scrolled && !isDark) ? ASSETS.logoPretoC : ASSETS.logoBrancoC;
+  // Usa logo escura quando: scrolled no light mode OU em página interna (não-home) no light mode
+  const needsDarkLogo = !isDark && (scrolled || !isHome);
+  const logoSrc = needsDarkLogo ? ASSETS.logoPretoC : ASSETS.logoBrancoC;
 
   const navBg = scrolled
     ? isDark
