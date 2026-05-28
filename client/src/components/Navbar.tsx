@@ -47,9 +47,9 @@ export default function Navbar() {
     }
   };
 
-  // Usa logo escura quando: scrolled no light mode OU em página interna (não-home) no light mode
-  const needsDarkLogo = !isDark && (scrolled || !isHome);
-  const logoSrc = needsDarkLogo ? ASSETS.logoPretoC : ASSETS.logoBrancoC;
+  // Usa logo/ícones escuros quando: light mode E (scrolled OU página interna)
+  const needsDarkStyle = !isDark && (scrolled || !isHome);
+  const logoSrc = needsDarkStyle ? ASSETS.logoPretoC : ASSETS.logoBrancoC;
 
   const navBg = scrolled
     ? isDark
@@ -119,8 +119,8 @@ export default function Navbar() {
               <button
                 onClick={toggleTheme}
                 className={`p-2 transition-colors duration-200 ${
-                  scrolled
-                    ? isDark ? "text-white/40 hover:text-white/80" : "text-stone-400 hover:text-stone-700"
+                  needsDarkStyle
+                    ? "text-stone-400 hover:text-stone-700"
                     : "text-white/40 hover:text-white/80"
                 }`}
                 aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
@@ -144,7 +144,7 @@ export default function Navbar() {
               <button
                 onClick={toggleTheme}
                 className={`p-2.5 transition-colors ${
-                  scrolled && !isDark ? "text-stone-500" : "text-white/55"
+                  needsDarkStyle ? "text-stone-500" : "text-white/55"
                 }`}
                 aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
               >
@@ -154,7 +154,7 @@ export default function Navbar() {
             <button
               onClick={() => setMobileOpen(v => !v)}
               className={`p-2.5 transition-colors ${
-                scrolled && !isDark ? "text-stone-800" : "text-white"
+                needsDarkStyle ? "text-stone-800" : "text-white"
               }`}
               aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
               aria-expanded={mobileOpen}
