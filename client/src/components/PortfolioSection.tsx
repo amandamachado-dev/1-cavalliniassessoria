@@ -77,25 +77,7 @@ export default function PortfolioSection() {
             </h2>
           </div>
 
-          {/* CTA desktop */}
-          <Link href="/portfolio">
-            <span
-              className={`hidden sm:inline-flex items-center gap-2 cursor-pointer transition-colors duration-200 reveal-right reveal-delay-3 ${headerVisible ? "visible" : ""}`}
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "0.65rem",
-                fontWeight: 500,
-                letterSpacing: "0.16em",
-                textTransform: "uppercase",
-                color: textMuted,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#D93E15")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
-            >
-              Ver portfólio completo
-              <ArrowRight className="w-3.5 h-3.5" />
-            </span>
-          </Link>
+
         </div>
 
         {/* ── Showcase: imagem + lista ── */}
@@ -310,22 +292,9 @@ export default function PortfolioSection() {
 
             {/* ── CTA final ── */}
             <div
-              className="mt-auto p-6 sm:p-8 flex items-center justify-between gap-4"
+              className="mt-auto p-6 sm:p-8 flex justify-center"
               style={{ borderTop: `1px solid ${border}` }}
             >
-              <p
-                className="m-0"
-                style={{
-                  fontFamily: "'Urbanist', sans-serif",
-                  fontWeight: 300,
-                  fontSize: "0.875rem",
-                  lineHeight: 1.6,
-                  color: textMuted,
-                  maxWidth: "22rem",
-                }}
-              >
-                Mais de 500 projetos entregues com aprovação total.
-              </p>
               <Link href="/portfolio">
                 <span
                   className="inline-flex items-center gap-2.5 cursor-pointer flex-shrink-0 transition-colors duration-200"
@@ -337,12 +306,12 @@ export default function PortfolioSection() {
                     textTransform: "uppercase",
                     color: "#FFFFFF",
                     backgroundColor: "#D93E15",
-                    padding: "0.75rem 1.5rem",
+                    padding: "0.75rem 2rem",
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#B83310")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#D93E15")}
                 >
-                  Ver portfólio
+                  Ver Portfólio
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </Link>
@@ -350,29 +319,7 @@ export default function PortfolioSection() {
           </div>
         </div>
 
-        {/* ── CTA mobile (abaixo da lista) ── */}
-        <div className="mt-6 flex justify-center lg:hidden">
-          <Link href="/portfolio">
-            <span
-              className="inline-flex items-center gap-2.5 cursor-pointer transition-colors duration-200"
-              style={{
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: "0.65rem",
-                fontWeight: 600,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                color: "#FFFFFF",
-                backgroundColor: "#D93E15",
-                padding: "0.875rem 2rem",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#B83310")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#D93E15")}
-            >
-              Ver portfólio completo
-              <ArrowRight className="w-3.5 h-3.5" />
-            </span>
-          </Link>
-        </div>
+
 
       </div>
     </section>
