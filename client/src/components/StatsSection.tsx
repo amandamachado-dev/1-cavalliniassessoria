@@ -65,7 +65,7 @@ export default function StatsSection() {
           alignItems: "center",
           whiteSpace: "nowrap",
           willChange: "transform",
-          animation: "ticker-scroll 28s linear infinite",
+          animation: "ticker-scroll 55s linear infinite",
         }}
       >
         {TICKER.map((item, i) => (
