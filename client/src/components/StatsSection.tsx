@@ -1,133 +1,137 @@
 /*
- * StatsSection — Métricas de impacto
- * Design: Faixa horizontal, 4 números grandes, dividers verticais sutis.
- * Sem borda dupla laranja. Linha única de acento no topo.
+ * StatsSection — Ticker faixa compacta
+ * Design: Faixa fina (40px) com dados em loop infinito para a esquerda.
+ * Elegância e sutileza: fonte mono pequena, separadores em laranja, sem ruído visual.
  */
-import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
-const STATS = [
-  { value: 10, suffix: "+", label: "Anos de Experiência" },
-  { value: 200, suffix: "+", label: "Projetos Aprovados" },
-  { value: 100, suffix: "%", label: "Foco em Aprovação" },
-  { value: 360, suffix: "°", label: "Assessoria Completa" },
+const ITEMS = [
+  { value: "10+",   label: "Anos de Experiência" },
+  { value: "200+",  label: "Projetos Aprovados"  },
+  { value: "100%",  label: "Foco em Aprovação"   },
+  { value: "360°",  label: "Assessoria Completa" },
 ];
 
-function useCountUp(target: number, duration: number, active: boolean) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!active) return;
-    let frame = 0;
-    const totalFrames = Math.round(duration / 16);
-    const timer = setInterval(() => {
-      frame++;
-      const progress = Math.min(frame / totalFrames, 1);
-      // Ease out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.round(eased * target));
-      if (frame >= totalFrames) clearInterval(timer);
-    }, 16);
-    return () => clearInterval(timer);
-  }, [target, duration, active]);
-  return count;
-}
-
-function StatItem({ value, suffix, label, active, isLast, delayClass }: {
-  value: number; suffix: string; label: string; active: boolean; isLast: boolean; delayClass: string;
-}) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const count = useCountUp(value, 1600, active);
-
-  return (
-    <div
-      className={`flex-1 flex flex-col items-center justify-center py-10 px-6 text-center min-w-[140px] reveal ${delayClass} ${active ? "visible" : ""}`}
-      style={{
-        borderRight: isLast
-          ? "none"
-          : isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.07)",
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "'Space Grotesk', sans-serif",
-          fontWeight: 700,
-          fontSize: "clamp(2.25rem, 4.5vw, 3.5rem)",
-          lineHeight: 1,
-          letterSpacing: "-0.025em",
-          color: "#D93E15",
-          marginBottom: "0.5rem",
-        }}
-      >
-        {count}
-        <span style={{ fontSize: "0.55em", fontWeight: 600 }}>{suffix}</span>
-      </div>
-      <p
-        style={{
-          fontFamily: "'Urbanist', sans-serif",
-          fontWeight: 500,
-          fontSize: "0.75rem",
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)",
-          margin: 0,
-        }}
-      >
-        {label}
-      </p>
-    </div>
-  );
-}
+// Duplicamos 4× para garantir loop contínuo sem gap
+const TICKER = [...ITEMS, ...ITEMS, ...ITEMS, ...ITEMS];
 
 export default function StatsSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const ref = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(false);
 
-  useEffect(() => {
-    // Fallback: se já está visível na carga inicial, ativa imediatamente
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight) {
-      setActive(true);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setActive(true); observer.disconnect(); } },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const bg    = isDark ? "#0D0D0D"              : "#EFECE8";
+  const border = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
+  const valCol = "#D93E15";
+  const lblCol = isDark ? "rgba(255,255,255,0.38)" : "rgba(0,0,0,0.38)";
+  const sepCol = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)";
 
   return (
     <section
-      ref={ref}
       aria-label="Números da Cavallini Assessoria"
       style={{
-        backgroundColor: isDark ? "#0D0D0D" : "#EFECE8",
-        borderTop: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(0,0,0,0.07)",
-        borderBottom: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(0,0,0,0.07)",
+        backgroundColor: bg,
+        borderTop:    `1px solid ${border}`,
+        borderBottom: `1px solid ${border}`,
+        overflow: "hidden",
+        height: "40px",
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
       }}
     >
-      {/* Accent line */}
-      <div style={{ height: "2px", backgroundColor: "#D93E15" }} />
+      {/* Accent line no topo */}
+      <div style={{
+        position: "absolute", top: 0, left: 0, right: 0,
+        height: "1.5px", backgroundColor: valCol, opacity: 0.7,
+      }} />
 
-      <div className="max-w-[1320px] mx-auto flex flex-wrap">
-        {STATS.map((s, i) => (
-          <StatItem
-            key={s.label}
-            value={s.value}
-            suffix={s.suffix}
-            label={s.label}
-            active={active}
-            isLast={i === STATS.length - 1}
-            delayClass={["reveal-delay-1","reveal-delay-2","reveal-delay-3","reveal-delay-4"][i]}
-          />
+      {/* Gradiente fade nas bordas */}
+      <div style={{
+        position: "absolute", left: 0, top: 0, bottom: 0, width: "80px", zIndex: 2,
+        background: `linear-gradient(to right, ${bg}, transparent)`,
+        pointerEvents: "none",
+      }} />
+      <div style={{
+        position: "absolute", right: 0, top: 0, bottom: 0, width: "80px", zIndex: 2,
+        background: `linear-gradient(to left, ${bg}, transparent)`,
+        pointerEvents: "none",
+      }} />
+
+      {/* Ticker */}
+      <div
+        className="ticker-track"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          whiteSpace: "nowrap",
+          willChange: "transform",
+          animation: "ticker-scroll 28s linear infinite",
+        }}
+      >
+        {TICKER.map((item, i) => (
+          <span
+            key={i}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.55rem",
+              paddingRight: "2.8rem",
+            }}
+          >
+            {/* Separador */}
+            <span style={{
+              display: "inline-block",
+              width: "3px", height: "3px",
+              borderRadius: "50%",
+              backgroundColor: valCol,
+              opacity: 0.6,
+              flexShrink: 0,
+            }} />
+
+            {/* Valor */}
+            <span style={{
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontWeight: 700,
+              fontSize: "0.72rem",
+              letterSpacing: "0.04em",
+              color: valCol,
+            }}>
+              {item.value}
+            </span>
+
+            {/* Label */}
+            <span style={{
+              fontFamily: "'Urbanist', sans-serif",
+              fontWeight: 500,
+              fontSize: "0.65rem",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: lblCol,
+            }}>
+              {item.label}
+            </span>
+
+            {/* Divisor vertical */}
+            <span style={{
+              display: "inline-block",
+              width: "1px", height: "14px",
+              backgroundColor: sepCol,
+              marginLeft: "1.4rem",
+              flexShrink: 0,
+            }} />
+          </span>
         ))}
       </div>
+
+      <style>{`
+        @keyframes ticker-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .ticker-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }
