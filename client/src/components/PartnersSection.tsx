@@ -1,9 +1,10 @@
 /*
  * PartnersSection — Grade única de logos de parceiros
- * Design: Grid simples sem divisão — 3 colunas no mobile, 4 no desktop.
- * F1, Coco Bambu e COP30 primeiro. Logos grayscale com hover colorido.
- * Sem linhas divisórias entre featured e secundários.
+ * Design: Grid simples — 3 colunas mobile / 4 desktop.
+ * Cada célula tem seu próprio IntersectionObserver: anima individualmente
+ * ao entrar no viewport, com delay sequencial (index × 80ms).
  */
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
@@ -25,13 +26,12 @@ const ALL_LOGOS = [
 export default function PartnersSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
+  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.05 });
 
   const bg = isDark ? "#0A0A0A" : "#F8F6F3";
   const borderColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
   const textPrimary = isDark ? "#F0EDEA" : "#0F0F0F";
 
-  // Logos: grayscale com boa opacidade para serem bem visíveis
   const logoFilter = isDark
     ? "grayscale(100%) brightness(0) invert(1)"
     : "grayscale(100%) brightness(0.15)";
@@ -93,7 +93,7 @@ export default function PartnersSection() {
 
         {/* Grade única — 3 colunas mobile / 4 colunas desktop */}
         <div
-          className={`reveal reveal-delay-2 partners-grid ${isVisible ? "visible" : ""}`}
+          className="partners-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
@@ -110,7 +110,6 @@ export default function PartnersSection() {
               borderColor={borderColor}
               logoFilter={logoFilter}
               index={i}
-              total={ALL_LOGOS.length}
             />
           ))}
         </div>
@@ -129,8 +128,9 @@ export default function PartnersSection() {
   );
 }
 
+/* ─── Célula individual com IntersectionObserver próprio ─── */
 function LogoCell({
-  name, src, isDark, borderColor, logoFilter, index, total,
+  name, src, isDark, borderColor, logoFilter, index,
 }: {
   name: string;
   src: string;
@@ -138,45 +138,68 @@ function LogoCell({
   borderColor: string;
   logoFilter: string;
   index: number;
-  total: number;
 }) {
+  const cellRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const hoverBg = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)";
+
+  // Observer individual — dispara quando a célula entra no viewport
+  useEffect(() => {
+    const el = cellRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Delay sequencial: cada célula espera index × 80ms
+          const timer = setTimeout(() => setVisible(true), index * 80);
+          observer.disconnect();
+          return () => clearTimeout(timer);
+        }
+      },
+      { threshold: 0.15, rootMargin: "-40px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [index]);
 
   const handleEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     const img = e.currentTarget.querySelector("img") as HTMLImageElement;
-    if (img) {
-      img.style.filter = "none";
-      img.style.opacity = "1";
-    }
+    if (img) { img.style.filter = "none"; img.style.opacity = "1"; }
     e.currentTarget.style.backgroundColor = hoverBg;
   };
 
   const handleLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     const img = e.currentTarget.querySelector("img") as HTMLImageElement;
-    if (img) {
-      img.style.filter = logoFilter;
-      img.style.opacity = isDark ? "0.85" : "0.75";
-    }
+    if (img) { img.style.filter = logoFilter; img.style.opacity = isDark ? "0.85" : "0.75"; }
     e.currentTarget.style.backgroundColor = "transparent";
+  };
+
+  // Estado da célula: invisível → desliza para cima e aparece
+  const cellStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "1.75rem 1.5rem",
+    borderRight: `1px solid ${borderColor}`,
+    borderBottom: `1px solid ${borderColor}`,
+    minHeight: "80px",
+    cursor: "default",
+    backgroundColor: "transparent",
+    transition: "background-color 0.25s ease, opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(18px)",
   };
 
   return (
     <div
+      ref={cellRef}
       title={name}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1.75rem 1.5rem",
-        borderRight: `1px solid ${borderColor}`,
-        borderBottom: `1px solid ${borderColor}`,
-        minHeight: "80px",
-        cursor: "default",
-        backgroundColor: "transparent",
-        transition: "background-color 0.25s ease",
-      }}
+      style={cellStyle}
     >
       <img
         src={src}
@@ -188,13 +211,11 @@ function LogoCell({
           height: "2.25rem",
           objectFit: "contain",
           filter: logoFilter,
-          opacity: 0,
-          transition: "filter 0.3s ease, opacity 0.5s ease",
+          opacity: imgLoaded ? (isDark ? 0.85 : 0.75) : 0,
+          transition: "filter 0.3s ease, opacity 0.4s ease",
           display: "block",
         }}
-        onLoad={(e) => {
-          e.currentTarget.style.opacity = isDark ? "0.85" : "0.75";
-        }}
+        onLoad={() => setImgLoaded(true)}
       />
     </div>
   );
