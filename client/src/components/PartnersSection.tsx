@@ -152,13 +152,15 @@ function LogoCell({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Delay sequencial: cada célula espera index × 80ms
-          const timer = setTimeout(() => setVisible(true), index * 80);
+          // Delay por posição na linha: desktop 4 cols, mobile 3 cols
+          const cols = window.innerWidth >= 768 ? 4 : 3;
+          const posInRow = index % cols;
+          const timer = setTimeout(() => setVisible(true), posInRow * 80);
           observer.disconnect();
           return () => clearTimeout(timer);
         }
       },
-      { threshold: 0.15, rootMargin: "-40px 0px" }
+      { threshold: 0.05, rootMargin: "0px 0px -20px 0px" }
     );
 
     observer.observe(el);
