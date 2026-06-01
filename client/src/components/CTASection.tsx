@@ -1,18 +1,36 @@
 /*
  * CTASection — Bloco de conversão intermediário
  * Design: Fundo laranja sólido. Sem ornamentos. Layout horizontal limpo.
- * Texto à esquerda, botão branco à direita.
+ * Animação: IntersectionObserver no container — texto da esquerda, botão da direita.
  */
 import { ArrowRight } from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useRef, useEffect, useState } from "react";
 
 const WHATSAPP = "https://wa.me/5511954004989?text=Ol%C3%A1%2C%20gostaria%20de%20solicitar%20um%20diagn%C3%B3stico%20gratuito%20para%20meu%20estabelecimento.";
 
 export default function CTASection() {
-  const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
-      ref={ref}
+      ref={sectionRef}
       aria-label="Solicite seu diagnóstico gratuito"
       style={{
         backgroundColor: "#D93E15",
@@ -31,7 +49,14 @@ export default function CTASection() {
         }}
       >
         {/* Text */}
-        <div className={`reveal-left ${isVisible ? "visible" : ""}`} style={{ flex: "1 1 380px" }}>
+        <div
+          style={{
+            flex: "1 1 380px",
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateX(0px)" : "translateX(-80px)",
+            transition: "opacity 0.95s cubic-bezier(0.16,1,0.3,1) 0s, transform 0.95s cubic-bezier(0.16,1,0.3,1) 0s",
+          }}
+        >
           <p
             style={{
               fontFamily: "'JetBrains Mono', monospace",
@@ -73,7 +98,14 @@ export default function CTASection() {
         </div>
 
         {/* CTA Button */}
-        <div className={`reveal-right reveal-delay-3 ${isVisible ? "visible" : ""}`} style={{ flexShrink: 0 }}>
+        <div
+          style={{
+            flexShrink: 0,
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateX(0px)" : "translateX(80px)",
+            transition: "opacity 0.95s cubic-bezier(0.16,1,0.3,1) 0.25s, transform 0.95s cubic-bezier(0.16,1,0.3,1) 0.25s",
+          }}
+        >
           <a
             href={WHATSAPP}
             target="_blank"

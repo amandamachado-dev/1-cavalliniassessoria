@@ -1,27 +1,48 @@
 /*
  * ServicesSection — Cards de serviços clicáveis
  * Design: Grid 2×2. Sem rounded corners. Imagem P&B → cor no hover.
- * Número grande como elemento decorativo. Linha laranja no hover.
+ * Animação: IntersectionObserver individual por card — cada um anima ao entrar no viewport.
  */
 import { SERVICES } from "@/lib/constants";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useRef, useEffect, useState } from "react";
 
 function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; index: number }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [cardVisible, setCardVisible] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCardVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.05, rootMargin: "0px 0px -20px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <Link href={`/servicos/${service.slug}`}>
       <div
+        ref={cardRef}
         className="group relative overflow-hidden cursor-pointer"
         style={{
-          opacity: 1,
+          opacity: cardVisible ? 1 : 0,
+          transform: cardVisible ? "translateY(0px)" : "translateY(60px)",
+          transition: `opacity 0.9s cubic-bezier(0.16,1,0.3,1) ${index * 0.13}s, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${index * 0.13}s`,
           backgroundColor: isDark ? "#111111" : "#FFFFFF",
           border: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.08)",
-          animationDelay: `${index * 80}ms`,
         }}
       >
         {/* Top accent line — reveals on hover */}
@@ -159,7 +180,6 @@ export default function ServicesSection() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const { ref: headerRef, isVisible: headerVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
-  const { ref: gridRef, isVisible: gridVisible } = useScrollReveal<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <section
@@ -208,15 +228,10 @@ export default function ServicesSection() {
           </h2>
         </div>
 
-        {/* Grid */}
-        <div ref={gridRef} className="grid md:grid-cols-2 gap-5 lg:gap-6">
+        {/* Grid — cada card tem seu próprio IntersectionObserver */}
+        <div className="grid md:grid-cols-2 gap-5 lg:gap-6">
           {SERVICES.map((service, i) => (
-            <div
-              key={service.id}
-              className={`reveal ${["reveal-delay-1","reveal-delay-2","reveal-delay-3","reveal-delay-4"][i]} ${gridVisible ? "visible" : ""}`}
-            >
-              <ServiceCard service={service} index={i} />
-            </div>
+            <ServiceCard key={service.id} service={service} index={i} />
           ))}
         </div>
       </div>

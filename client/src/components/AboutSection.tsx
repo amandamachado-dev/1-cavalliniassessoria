@@ -1,21 +1,43 @@
 /*
  * AboutSection — Quem Somos
  * Design: Split layout. Text left, image right. No rounded corners.
- * No floating badge. No duplicate stats. Clean editorial.
+ * Animação: IntersectionObserver individual — texto da esquerda, imagem da direita.
  */
 import { ASSETS } from "@/lib/constants";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useRef, useEffect, useState } from "react";
+
+function useElementReveal<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.06, rootMargin: "0px 0px -30px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return { ref, visible };
+}
 
 export default function AboutSection() {
-  const { ref: sectionRef, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
+  const textReveal = useElementReveal<HTMLDivElement>();
+  const imgReveal = useElementReveal<HTMLDivElement>();
 
   return (
     <section
       id="quem-somos"
-      ref={sectionRef}
       className="relative py-24 md:py-32"
       style={{
         backgroundColor: isDark ? "#0A0A0A" : "#F5F2EE",
@@ -27,7 +49,15 @@ export default function AboutSection() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
           {/* Left — Text */}
-          <div className={`space-y-8 reveal-left ${isVisible ? "visible" : ""}`}>
+          <div
+            ref={textReveal.ref}
+            className="space-y-8"
+            style={{
+              opacity: textReveal.visible ? 1 : 0,
+              transform: textReveal.visible ? "translateX(0px)" : "translateX(-80px)",
+              transition: "opacity 0.95s cubic-bezier(0.16,1,0.3,1) 0s, transform 0.95s cubic-bezier(0.16,1,0.3,1) 0s",
+            }}
+          >
             {/* Eyebrow */}
             <div className="flex items-center gap-3">
               <span className="w-6 h-[1px] bg-[#D93E15] flex-shrink-0" />
@@ -133,13 +163,24 @@ export default function AboutSection() {
           </div>
 
           {/* Right — Image */}
-          <div className={`reveal-right reveal-delay-2 ${isVisible ? "visible" : ""}`}>
+          <div
+            ref={imgReveal.ref}
+            style={{
+              opacity: imgReveal.visible ? 1 : 0,
+              transform: imgReveal.visible ? "translateX(0px)" : "translateX(80px)",
+              transition: "opacity 0.95s cubic-bezier(0.16,1,0.3,1) 0.2s, transform 0.95s cubic-bezier(0.16,1,0.3,1) 0.2s",
+            }}
+          >
             <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
               <img
                 src={ASSETS.tresImgPeb}
                 alt="Equipe Cavallini em campo realizando vistoria técnica"
                 className="w-full h-full object-cover"
-                style={{ filter: "grayscale(100%)", transition: "opacity 0.6s ease, filter 0.6s ease", opacity: 0 }}
+                style={{
+                  filter: "grayscale(100%)",
+                  transition: "opacity 0.6s ease, filter 0.6s ease",
+                  opacity: 0,
+                }}
                 loading="eager"
                 onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}
                 onMouseEnter={(e) => (e.currentTarget.style.filter = "grayscale(0%)")}
@@ -155,7 +196,6 @@ export default function AboutSection() {
                 }}
               />
             </div>
-
             {/* Caption */}
             <p
               style={{
