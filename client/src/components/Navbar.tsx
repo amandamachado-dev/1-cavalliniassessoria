@@ -51,11 +51,14 @@ export default function Navbar() {
   const needsDarkStyle = !isDark && (scrolled || !isHome);
   const logoSrc = needsDarkStyle ? ASSETS.logoPretoC : ASSETS.logoBrancoC;
 
+  // Em páginas internas no light mode, a navbar precisa de fundo sólido mesmo sem scroll
   const navBg = scrolled
     ? isDark
       ? "bg-[#0A0A0A]/95 border-b border-white/[0.06]"
       : "bg-white/95 border-b border-black/[0.08] shadow-[0_1px_0_rgba(0,0,0,0.04)]"
-    : "bg-transparent border-b border-transparent";
+    : (!isHome && !isDark)
+      ? "bg-white/98 border-b border-black/[0.08] shadow-[0_1px_0_rgba(0,0,0,0.04)]"
+      : "bg-transparent border-b border-transparent";
 
   return (
     <>
@@ -88,9 +91,13 @@ export default function Navbar() {
               const isActive = isFaqLink && location === "/faq";
               const textStyle = isActive
                 ? "text-[#D93E15]"
-                : scrolled
-                  ? isDark ? "text-white/55 hover:text-white" : "text-stone-500 hover:text-stone-900"
-                  : "text-white/60 hover:text-white";
+                : needsDarkStyle
+                  ? scrolled
+                    ? "text-stone-500 hover:text-stone-900"
+                    : "text-stone-600 hover:text-stone-900"
+                  : scrolled
+                    ? isDark ? "text-white/55 hover:text-white" : "text-stone-500 hover:text-stone-900"
+                    : "text-white/60 hover:text-white";
 
               return isFaqLink ? (
                 <Link
