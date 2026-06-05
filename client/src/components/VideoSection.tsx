@@ -52,12 +52,12 @@ export default function VideoSection() {
         borderBottom: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(0,0,0,0.07)",
       }}
     >
-      {/* Video container */}
-      <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
+      {/* Video container — 16:9 no mobile, 440px fixo no desktop (igual ao ParallaxDivider) */}
+      <div className="relative w-full aspect-video lg:aspect-auto lg:h-[440px] overflow-hidden">
         <video
           ref={videoRef}
           src={ASSETS.fireExtinguisherVideo}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          className="absolute inset-0 w-full h-full object-cover"
           playsInline
           muted
           loop
