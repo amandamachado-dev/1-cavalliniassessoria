@@ -66,8 +66,8 @@ function ServiceCard({ service, index }: { service: (typeof SERVICES)[number]; i
           <img
             src={service.image}
             alt={service.title}
-            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.04]"
-            style={{ filter: "grayscale(100%)", transition: "opacity 0.5s ease, filter 0.6s ease, transform 0.7s ease", opacity: 0 }}
+            className="w-full h-full object-cover group-hover:scale-[1.04]"
+            style={{ filter: "grayscale(100%)", transition: "opacity 0.5s ease, filter 0.6s ease, transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94)", opacity: 0 }}
             loading="eager"
             fetchPriority={index < 2 ? "high" : "auto"}
             onLoad={(e) => { e.currentTarget.style.opacity = "1"; }}

@@ -208,9 +208,8 @@ function LogoCell({
         alt={`Logo ${name}`}
         loading={index < 6 ? "eager" : "lazy"}
         style={{
-          width: "100%",
-          maxWidth: "110px",
-          height: "2.25rem",
+          width: "100px",
+          height: "40px",
           objectFit: "contain",
           filter: logoFilter,
           opacity: imgLoaded ? (isDark ? 0.85 : 0.75) : 0,
