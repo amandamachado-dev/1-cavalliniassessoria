@@ -10,16 +10,16 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // Ordem: destaques primeiro, depois os demais
 const ALL_LOGOS = [
-  { name: "Fórmula 1 — GP Brasil", src: "/manus-storage/f1-logo_f600a2bc.png" },
-  { name: "Interlagos", src: "/manus-storage/ChatGPTImage27dejun.de2026,18_46_28_1ebe5557.png" },
-  { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png" },
-  { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png" },
-  { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png" },
-  { name: "Pontuall", src: "/manus-storage/pontuall-clean_c6e2a96b.png" },
-  { name: "Parceiro 1", src: "/manus-storage/parceiro-1_f08161cb.png" },
-  { name: "Parceiro 2", src: "/manus-storage/parceiro-2_c4923d46.png" },
-  { name: "Parceiro 3", src: "/manus-storage/parceiro-3_757615aa.png" },
-  { name: "Parceiro 4", src: "/manus-storage/parceiro-4_5401ae06.png" },
+  { name: "Fórmula 1 — GP Brasil", src: "/manus-storage/f1-logo_f600a2bc.png", scale: 1 },
+  { name: "Interlagos", src: "/manus-storage/ChatGPTImage27dejun.de2026,18_46_28_1ebe5557.png", scale: 1.5 },
+  { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png", scale: 1 },
+  { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png", scale: 1 },
+  { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png", scale: 1 },
+  { name: "Pontuall", src: "/manus-storage/pontuall-clean_c6e2a96b.png", scale: 1 },
+  { name: "Parceiro 1", src: "/manus-storage/parceiro-1_f08161cb.png", scale: 1.5 },
+  { name: "Parceiro 2", src: "/manus-storage/parceiro-2_c4923d46.png", scale: 1.5 },
+  { name: "Parceiro 3", src: "/manus-storage/parceiro-3_757615aa.png", scale: 1.5 },
+  { name: "Parceiro 4", src: "/manus-storage/parceiro-4_5401ae06.png", scale: 1.5 },
 ];
 
 export default function PartnersSection() {
@@ -105,6 +105,7 @@ export default function PartnersSection() {
               key={logo.name}
               name={logo.name}
               src={logo.src}
+              scale={logo.scale}
               isDark={isDark}
               borderColor={borderColor}
               logoFilter={logoFilter}
@@ -129,10 +130,11 @@ export default function PartnersSection() {
 
 /* ─── Célula individual com IntersectionObserver próprio ─── */
 function LogoCell({
-  name, src, isDark, borderColor, logoFilter, index,
+  name, src, scale, isDark, borderColor, logoFilter, index,
 }: {
   name: string;
   src: string;
+  scale: number;
   isDark: boolean;
   borderColor: string;
   logoFilter: string;
@@ -207,8 +209,8 @@ function LogoCell({
         alt={`Logo ${name}`}
         loading={index < 6 ? "eager" : "lazy"}
         style={{
-          width: "120px",
-          height: "48px",
+          width: `${120 * scale}px`,
+          height: `${48 * scale}px`,
           objectFit: "contain",
           filter: logoFilter,
           opacity: imgLoaded ? (isDark ? 0.85 : 0.75) : 0,
