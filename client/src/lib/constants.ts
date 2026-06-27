@@ -132,7 +132,7 @@ export const SERVICES = [
     title: "Execução e Manutenção",
     subtitle: "Instalação e Manutenção de Sistemas",
     description: "Execução completa de instalações de combate a incêndio e manutenção preventiva e corretiva de todos os sistemas, garantindo funcionamento contínuo e segurança permanente.",
-    image: "/manus-storage/trabalhador-costas-com-logo_0688fd68.webp",
+    image: "/manus-storage/qgSxK2jJBPx9_852b25b8.jpg",
     features: ["Instalação de sistemas", "Hidrantes e sprinklers", "Manutenção preventiva", "Manutenção corretiva"],
     pageTitle: "Execução e Manutenção com excelência operacional.",
     pageDescription: "Realizamos a execução completa de instalações de combate a incêndio, desde hidrantes e sprinklers até sistemas de alarme e detecção. Nossa equipe técnica garante que cada instalação seja feita com precisão e qualidade.",
