@@ -47,8 +47,6 @@ export const PARTNER_LOGOS = [
   { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png" },
   { name: "F1", src: "/manus-storage/f1-logo_f600a2bc.png" },
   { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png" },
-  { name: "GL Events", src: "/manus-storage/gl-events-logo_c85a7e17.png" },
-  { name: "MD", src: "/manus-storage/md-logo_e81ff46d.png" },
   { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png" },
   { name: "Pontuall", src: "/manus-storage/pontuall-clean_c6e2a96b.png" },
 ] as const;
