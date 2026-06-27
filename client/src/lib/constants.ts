@@ -235,7 +235,7 @@ export const PORTFOLIO_ITEMS = [
     solution: "Desenvolvimento de projetos técnicos completos, dimensionamento de sistemas hidráulicos e de detecção, coordenação com equipes internacionais e execução dentro dos padrões exigidos pelos organismos internacionais.",
     result: "Sistemas instalados e aprovados dentro do prazo, atendendo a todos os requisitos nacionais e internacionais de segurança contra incêndio.",
     tags: ["Projetos", "Execução", "Sistemas Hidráulicos", "Detecção"],
-    image: "/manus-storage/UJcOHCCUPpNu_8a336e96.jpg",
+    image: "/manus-storage/TV2kiYpzBOX0_2531b51f.jpg",
     logoSrc: "/manus-storage/cop30-logo_3e7fc7df.png",
     featured: true,
   },
