@@ -11,6 +11,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 // Ordem: destaques primeiro, depois os demais
 const ALL_LOGOS = [
   { name: "Fórmula 1 — GP Brasil", src: "/manus-storage/f1-logo_f600a2bc.png" },
+  { name: "Interlagos", src: "/manus-storage/interlagos-logo-transparent_fc33802c.png" },
   { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png" },
   { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png" },
   { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png" },
