@@ -95,7 +95,7 @@ export default function PartnersSection() {
           className="partners-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(2, 1fr)",
             gap: "0",
             border: `1px solid ${borderColor}`,
           }}
@@ -116,9 +116,14 @@ export default function PartnersSection() {
 
         {/* CSS responsivo para 4 colunas no desktop */}
         <style>{`
-          @media (min-width: 768px) {
+          @media (min-width: 640px) {
             .partners-grid {
-              grid-template-columns: repeat(4, 1fr) !important;
+              grid-template-columns: repeat(3, 1fr) !important;
+            }
+          }
+          @media (min-width: 1024px) {
+            .partners-grid {
+              grid-template-columns: repeat(5, 1fr) !important;
             }
           }
         `}</style>
