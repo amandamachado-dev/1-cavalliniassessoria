@@ -1,33 +1,20 @@
 /*
- * ContactSection — Formulário de contato
+ * ContactSection — Formulário de contato integrado com Formspree
  * Design: Grid 3+2. Sem rounded corners. Inputs com borda inferior apenas.
- * Sem radial gradient. Sem sombra glow no botão.
+ * Endpoint: https://formspree.io/f/mnjkvpqq
  */
-import { useState } from "react";
+import { useForm, ValidationError } from "@formspree/react";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTheme } from "@/contexts/ThemeContext";
-import { toast } from "sonner";
-import { ArrowRight, Phone, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Phone, MapPin, Clock, CheckCircle } from "lucide-react";
 
 export default function ContactSection() {
   const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const [formData, setFormData] = useState({
-    name: "", email: "", phone: "", subject: "", message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Mensagem enviada! Entraremos em contato em breve.");
-    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const [state, handleSubmit] = useForm("mnjkvpqq");
 
   const labelStyle: React.CSSProperties = {
     display: "block",
@@ -86,82 +73,112 @@ export default function ContactSection() {
 
           {/* Form */}
           <div className={`lg:col-span-3 reveal reveal-delay-2 ${isVisible ? "visible" : ""}`}>
-            <form onSubmit={handleSubmit} className="space-y-7">
-              <div className="grid sm:grid-cols-2 gap-7">
-                <div>
-                  <label htmlFor="name" style={labelStyle}>Nome *</label>
-                  <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} style={inputStyle} placeholder="Seu nome completo"
-                    onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
-                    onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" style={labelStyle}>E-mail *</label>
-                  <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange} style={inputStyle} placeholder="seu@email.com"
-                    onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
-                    onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
-                  />
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-7">
-                <div>
-                  <label htmlFor="phone" style={labelStyle}>Telefone</label>
-                  <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} style={inputStyle} placeholder="(11) 99999-9999"
-                    onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
-                    onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="subject" style={labelStyle}>Assunto *</label>
-                  <select id="subject" name="subject" required value={formData.subject} onChange={handleChange}
-                    style={{ ...inputStyle, appearance: "none", cursor: "pointer" }}
-                    onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
-                    onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
-                  >
-                    <option value="" style={{ background: isDark ? "#111" : "#fff" }}>Selecione...</option>
-                    <option value="avcb" style={{ background: isDark ? "#111" : "#fff" }}>AVCB</option>
-                    <option value="consultoria" style={{ background: isDark ? "#111" : "#fff" }}>Consultoria</option>
-                    <option value="projetos" style={{ background: isDark ? "#111" : "#fff" }}>Projetos</option>
-                    <option value="execucao" style={{ background: isDark ? "#111" : "#fff" }}>Execução e Manutenção</option>
-                    <option value="outro" style={{ background: isDark ? "#111" : "#fff" }}>Outro</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="message" style={labelStyle}>Mensagem *</label>
-                <textarea id="message" name="message" required rows={4} value={formData.message} onChange={handleChange}
-                  style={{ ...inputStyle, resize: "none" }}
-                  placeholder="Descreva brevemente sua necessidade..."
-                  onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
-                  onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2.5 group"
+            {state.succeeded ? (
+              <div
                 style={{
-                  backgroundColor: "#D93E15",
-                  color: "#FFFFFF",
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontWeight: 500,
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.16em",
-                  textTransform: "uppercase",
-                  padding: "0.9rem 2rem",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "background-color 0.2s ease",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "3rem 2rem",
+                  border: isDark ? "1px solid rgba(217,62,21,0.2)" : "1px solid rgba(217,62,21,0.15)",
+                  backgroundColor: isDark ? "rgba(217,62,21,0.04)" : "rgba(217,62,21,0.03)",
+                  textAlign: "center",
+                  minHeight: "300px",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#C03510")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#D93E15")}
               >
-                Enviar Mensagem
-                <ArrowRight style={{ width: "0.8rem", height: "0.8rem" }} />
-              </button>
-            </form>
+                <CheckCircle style={{ width: "2.5rem", height: "2.5rem", color: "#D93E15", marginBottom: "1.25rem" }} />
+                <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 500, fontSize: "1.5rem", color: isDark ? "#F0EDEA" : "#0F0F0F", marginBottom: "0.75rem" }}>
+                  Mensagem enviada!
+                </h3>
+                <p style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 300, fontSize: "0.95rem", color: isDark ? "rgba(240,237,234,0.6)" : "rgba(15,15,15,0.6)", maxWidth: "28rem" }}>
+                  Obrigado pelo contato. Nossa equipe retornará em até 24 horas úteis.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-7">
+                <div className="grid sm:grid-cols-2 gap-7">
+                  <div>
+                    <label htmlFor="name" style={labelStyle}>Nome *</label>
+                    <input type="text" id="name" name="name" required style={inputStyle} placeholder="Seu nome completo"
+                      onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
+                      onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
+                    />
+                    <ValidationError prefix="Nome" field="name" errors={state.errors} className="text-red-500 text-xs mt-1" />
+                  </div>
+                  <div>
+                    <label htmlFor="email" style={labelStyle}>E-mail *</label>
+                    <input type="email" id="email" name="email" required style={inputStyle} placeholder="seu@email.com"
+                      onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
+                      onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
+                    />
+                    <ValidationError prefix="E-mail" field="email" errors={state.errors} className="text-red-500 text-xs mt-1" />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-7">
+                  <div>
+                    <label htmlFor="phone" style={labelStyle}>Telefone</label>
+                    <input type="tel" id="phone" name="phone" style={inputStyle} placeholder="(11) 99999-9999"
+                      onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
+                      onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="subject" style={labelStyle}>Assunto *</label>
+                    <select id="subject" name="subject" required
+                      style={{ ...inputStyle, appearance: "none", cursor: "pointer" }}
+                      onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
+                      onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
+                    >
+                      <option value="" style={{ background: isDark ? "#111" : "#fff" }}>Selecione...</option>
+                      <option value="AVCB" style={{ background: isDark ? "#111" : "#fff" }}>AVCB</option>
+                      <option value="Consultoria" style={{ background: isDark ? "#111" : "#fff" }}>Consultoria</option>
+                      <option value="Projetos" style={{ background: isDark ? "#111" : "#fff" }}>Projetos</option>
+                      <option value="Execução e Manutenção" style={{ background: isDark ? "#111" : "#fff" }}>Execução e Manutenção</option>
+                      <option value="Outro" style={{ background: isDark ? "#111" : "#fff" }}>Outro</option>
+                    </select>
+                    <ValidationError prefix="Assunto" field="subject" errors={state.errors} className="text-red-500 text-xs mt-1" />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="message" style={labelStyle}>Mensagem *</label>
+                  <textarea id="message" name="message" required rows={4}
+                    style={{ ...inputStyle, resize: "none" }}
+                    placeholder="Descreva brevemente sua necessidade..."
+                    onFocus={(e) => e.currentTarget.style.borderBottomColor = "#D93E15"}
+                    onBlur={(e) => e.currentTarget.style.borderBottomColor = isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.15)"}
+                  />
+                  <ValidationError prefix="Mensagem" field="message" errors={state.errors} className="text-red-500 text-xs mt-1" />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={state.submitting}
+                  className="inline-flex items-center gap-2.5 group"
+                  style={{
+                    backgroundColor: state.submitting ? "#9a2e10" : "#D93E15",
+                    color: "#FFFFFF",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: 500,
+                    fontSize: "0.65rem",
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    padding: "0.9rem 2rem",
+                    border: "none",
+                    cursor: state.submitting ? "not-allowed" : "pointer",
+                    transition: "background-color 0.2s ease",
+                    opacity: state.submitting ? 0.7 : 1,
+                  }}
+                  onMouseEnter={(e) => { if (!state.submitting) e.currentTarget.style.backgroundColor = "#C03510"; }}
+                  onMouseLeave={(e) => { if (!state.submitting) e.currentTarget.style.backgroundColor = "#D93E15"; }}
+                >
+                  {state.submitting ? "Enviando..." : "Enviar Mensagem"}
+                  <ArrowRight style={{ width: "0.8rem", height: "0.8rem" }} />
+                </button>
+              </form>
+            )}
           </div>
 
           {/* Info */}
