@@ -128,7 +128,7 @@ export default function HeroSection() {
           }}
         >
           Assessoria completa em AVCB, projetos de engenharia e execução de sistemas de combate a incêndio.{" "}
-          <span className="text-white/50">Do diagnóstico à aprovação final.</span>
+          <span className="text-white/50">Da avaliação à aprovação final.</span>
         </p>
 
         {/* ── CTAs ──

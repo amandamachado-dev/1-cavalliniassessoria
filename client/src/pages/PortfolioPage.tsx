@@ -405,7 +405,7 @@ export default function PortfolioPage() {
 
         {/* ── CTA Final ── */}
         <section
-          aria-label="Solicite seu diagnóstico"
+          aria-label="Solicite sua avaliação"
           className="px-5 sm:px-6 lg:px-8 py-14 sm:py-16"
           style={{ backgroundColor: "#D93E15" }}
         >
@@ -458,7 +458,7 @@ export default function PortfolioPage() {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#F5F2EE")}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#FFFFFF")}
             >
-              Solicitar diagnóstico gratuito
+              Solicitar avaliação gratuita
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>

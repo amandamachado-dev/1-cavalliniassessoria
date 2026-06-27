@@ -31,7 +31,7 @@ export default function CTASection() {
   return (
     <section
       ref={sectionRef}
-      aria-label="Solicite seu diagnóstico gratuito"
+      aria-label="Solicite sua avaliação gratuita"
       style={{
         backgroundColor: "#D93E15",
         padding: "4.5rem 2rem",
@@ -68,7 +68,7 @@ export default function CTASection() {
               marginBottom: "0.75rem",
             }}
           >
-            Diagnóstico gratuito
+            Avaliação gratuita
           </p>
           <h2
             style={{
@@ -110,7 +110,7 @@ export default function CTASection() {
             href={WHATSAPP}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Solicitar diagnóstico gratuito via WhatsApp"
+            aria-label="Solicitar avaliação gratuita via WhatsApp"
             className="inline-flex items-center gap-2.5 group"
             style={{
               backgroundColor: "#FFFFFF",
@@ -134,7 +134,7 @@ export default function CTASection() {
               (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#FFFFFF";
             }}
           >
-            Solicitar diagnóstico
+            Solicitar avaliação
             <ArrowRight style={{ width: "0.875rem", height: "0.875rem" }} />
           </a>
         </div>
