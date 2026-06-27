@@ -8,7 +8,7 @@ export const ASSETS = {
   // Generated hero backgrounds (compressed WebP)
   heroBg1: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-bg-1-aHrJipszL7MfUk4YnpSKRL.webp",
   heroBg2: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-bg-2-jTuby8AfG93jMA92VwwRA9.webp",
-  heroBg3: "/manus-storage/lEUTm8DoFjMr_c404c054.png",
+  heroBg3: "/manus-storage/I8oFfJmFFnxi_c3c4ddf1.jpg",
   heroExtintor: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/hero-extintor-7T58XkhipfLHYSFaksWgNi.webp",
   aboutBg: "https://d2xsxph8kpxj0f.cloudfront.net/310419663029960001/EJKLd5S4d8nwmwUsXsH3Mz/about-section-bg-6PAfJWyoL365PZhZ8xdwye.webp",
 
