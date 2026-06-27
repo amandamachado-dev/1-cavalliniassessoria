@@ -95,7 +95,7 @@ export default function FAQPage() {
 
       <main className="flex-1">
         {/* Hero Banner */}
-        <section className="relative pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden">
+        <section className="relative pt-36 pb-16 md:pt-40 md:pb-20 overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img
@@ -120,7 +120,7 @@ export default function FAQPage() {
             {/* Back link */}
             <a
               href="/"
-              className={`inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest mb-8 transition-colors hover:text-[#d93e15] ${
+              className={`inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest mb-6 sm:mb-8 transition-colors hover:text-[#d93e15] ${
                 isDark ? "text-stone-500" : "text-stone-400"
               }`}
             >
@@ -128,7 +128,7 @@ export default function FAQPage() {
               Voltar ao início
             </a>
 
-            <div className="inline-flex items-center gap-3 mb-6">
+            <div className="flex items-center justify-center gap-3 mb-6">
               <span className="w-8 h-[1px] bg-[#d93e15]" />
               <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#d93e15] font-bold">
                 FAQ

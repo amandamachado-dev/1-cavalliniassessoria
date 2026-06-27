@@ -69,7 +69,7 @@ export default function PortfolioCasePage() {
 
       <main>
         {/* ── Layout split: imagem topo no mobile, lateral no desktop ── */}
-        <div className="flex flex-col lg:flex-row w-full pt-[72px] lg:pt-0" style={{ minHeight: "100vh" }}>
+        <div className="flex flex-col lg:flex-row w-full pt-[80px] lg:pt-0" style={{ minHeight: "100vh" }}>
 
           {/* ── Image Panel ── */}
           <div

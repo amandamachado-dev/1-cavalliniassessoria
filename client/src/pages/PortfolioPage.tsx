@@ -48,7 +48,7 @@ export default function PortfolioPage() {
         {/* ── Hero ── */}
         <section
           aria-label="Portfólio de Cases em Segurança Contra Incêndio"
-          className="relative overflow-hidden pt-28 sm:pt-32 pb-14 sm:pb-20"
+          className="relative overflow-hidden pt-32 sm:pt-36 pb-14 sm:pb-20"
           style={{ borderBottom: `1px solid ${border}` }}
         >
           {/* Background watermark — só desktop */}
