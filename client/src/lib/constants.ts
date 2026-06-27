@@ -46,7 +46,7 @@ export const PARTNER_LOGOS = [
   { name: "Parceiro 4", src: "/manus-storage/parceiro-4_5401ae06.png" },
   { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png" },
   { name: "F1", src: "/manus-storage/f1-logo_f600a2bc.png" },
-  { name: "Interlagos", src: "/manus-storage/interlagos-logo-transparent_fc33802c.png" },
+  { name: "Interlagos", src: "/manus-storage/ChatGPTImage27dejun.de2026,18_46_28_1ebe5557.png" },
   { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png" },
   { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png" },
   { name: "Pontuall", src: "/manus-storage/pontuall-clean_c6e2a96b.png" },
