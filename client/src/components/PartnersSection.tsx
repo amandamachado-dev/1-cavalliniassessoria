@@ -10,12 +10,12 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // Ordem: destaques primeiro, depois os demais
 const ALL_LOGOS = [
-  { name: "Fórmula 1 — GP Brasil", src: "/manus-storage/f1-logo_f600a2bc.png", scale: 1 },
+  { name: "Fórmula 1 — GP Brasil", src: "/assets/f1-logo_f600a2bc.png", scale: 1 },
   { name: "Interlagos", src: "/manus-storage/ChatGPTImage27dejun.de2026,18_46_28_1ebe5557.png", scale: 1.5 },
-  { name: "Coco Bambu", src: "/manus-storage/coco-bambu-clean_818d0f37.png", scale: 1 },
-  { name: "COP30", src: "/manus-storage/cop30-logo_3e7fc7df.png", scale: 1 },
-  { name: "Goya Perfumaria", src: "/manus-storage/goya-logo_70567333.png", scale: 1 },
-  { name: "Pontuall", src: "/manus-storage/pontuall-clean_c6e2a96b.png", scale: 1 },
+  { name: "Coco Bambu", src: "/assets/coco-bambu-clean_818d0f37.png", scale: 1 },
+  { name: "COP30", src: "/assets/cop30-logo_3e7fc7df.png", scale: 1 },
+  { name: "Goya Perfumaria", src: "/assets/goya-logo_70567333.png", scale: 1 },
+  { name: "Pontuall", src: "/assets/pontuall-clean_c6e2a96b.png", scale: 1 },
   { name: "Parceiro 1", src: "/manus-storage/parceiro-1_f08161cb.png", scale: 1.5 },
   { name: "Parceiro 2", src: "/manus-storage/parceiro-2_c4923d46.png", scale: 1.5 },
   { name: "Parceiro 3", src: "/manus-storage/parceiro-3_757615aa.png", scale: 1.5 },
