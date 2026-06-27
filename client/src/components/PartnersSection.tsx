@@ -173,9 +173,12 @@ function LogoCell({
     return () => observer.disconnect();
   }, [index]);
 
+  // No tema claro, manter brightness baixo no hover para logos com texto branco não sumirem
+  const hoverFilter = isDark ? "none" : "grayscale(0%) brightness(0.2)";
+
   const handleEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     const img = e.currentTarget.querySelector("img") as HTMLImageElement;
-    if (img) { img.style.filter = "none"; img.style.opacity = "1"; }
+    if (img) { img.style.filter = hoverFilter; img.style.opacity = "1"; }
     e.currentTarget.style.backgroundColor = hoverBg;
   };
 
