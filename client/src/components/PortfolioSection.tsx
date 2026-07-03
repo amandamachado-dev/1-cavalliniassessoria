@@ -99,7 +99,7 @@ export default function PortfolioSection() {
                   src={item.image}
                   alt={`Case ${item.client} — ${item.service} | Cavallini Assessoria`}
                   className="w-full h-full object-cover block"
-                  loading="eager"
+                  loading="lazy"
                   style={{
                     filter: "grayscale(20%) brightness(0.85)",
                     transform: i === activeIndex ? "scale(1.02)" : "scale(1)",

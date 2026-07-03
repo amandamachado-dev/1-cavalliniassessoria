@@ -79,6 +79,8 @@ export default function HeroSection() {
             alt={img.alt}
             className="w-full h-full object-cover"
             loading={i === 0 ? "eager" : "lazy"}
+            {...(i === 0 ? { fetchPriority: "high" as any } : {})}
+            decoding={i === 0 ? "sync" : "async"}
           />
         </div>
       ))}
@@ -96,7 +98,7 @@ export default function HeroSection() {
       {/* ── Content ── */}
       <div
         className="relative z-10 flex flex-col items-center text-center w-full"
-        style={{ padding: "0 clamp(1.25rem, 6vw, 3rem)", maxWidth: "760px", margin: "0 auto" }}
+        style={{ padding: "0 clamp(1.5rem, 8vw, 3rem)", maxWidth: "760px", margin: "0 auto" }}
       >
 
         {/* Logo — maior no mobile */}

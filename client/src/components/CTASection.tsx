@@ -35,6 +35,7 @@ export default function CTASection() {
       style={{
         backgroundColor: "#D93E15",
         padding: "4.5rem 2rem",
+        overflow: "hidden",
       }}
     >
       <div

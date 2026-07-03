@@ -38,7 +38,7 @@ export default function AboutSection() {
   return (
     <section
       id="quem-somos"
-      className="relative py-24 md:py-32"
+      className="relative py-24 md:py-32 overflow-hidden"
       style={{
         backgroundColor: isDark ? "#0A0A0A" : "#F5F2EE",
         borderTop: isDark ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(0,0,0,0.07)",
