@@ -109,10 +109,10 @@ export default function HeroSection() {
             alt="Cavallini Assessoria"
             loading="eager"
             style={{
-              /* mobile: ~80px | tablet: ~110px | desktop: ~136px */
-              height: "clamp(80px, 16vw, 136px)",
+              /* mobile: ~100px | tablet: ~140px | desktop: ~180px */
+              height: "clamp(100px, 20vw, 180px)",
               width: "auto",
-              maxWidth: "min(75vw, 440px)",
+              maxWidth: "min(85vw, 540px)",
               objectFit: "contain",
             }}
           />
