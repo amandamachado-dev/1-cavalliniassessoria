@@ -20,7 +20,7 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { useTheme } from "@/contexts/ThemeContext";
 
 // URL da imagem parallax (webdev storage)
-const PARALLAX_EXTINTOR = "/manus-storage/extintor-cavallini(2)_2f360364.png";
+const PARALLAX_EXTINTOR = "/manus-storage/extintor-cavallini-logo_e6bafab7.png";
 
 export default function Home() {
   const { theme } = useTheme();
