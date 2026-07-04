@@ -28,7 +28,7 @@ export default function ParallaxDivider({
         minHeight: height,
         backgroundImage: `url(${image})`,
         backgroundAttachment: "fixed",
-        backgroundPosition: "center top",
+        backgroundPosition: "center 15%",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
